@@ -1,0 +1,51 @@
+/* Extras del Dojo de React sobre assets/dojo.css: vista previa, opciones de las predicciones y playground */
+
+/* La vista previa imita una página común (fondo claro) para distinguir lo que renderiza tu componente */
+:root {
+  --pv-bg: #ffffff; --pv-text: #111111; --pv-btn: #f1f1f1; --pv-btn-hover: #e4e4e4;
+  --pv-border: #bbbbbb; --pv-border-hover: #888888; --pv-error: #b00020;
+}
+
+/* ---------- vista previa de componentes ---------- */
+.pv {
+  margin-top: 10px; padding: 16px; min-height: 64px;
+  background: var(--pv-bg); color: var(--pv-text); border: 1px solid var(--line); border-radius: 8px;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; font-size: 15px; line-height: 1.45;
+  overflow: auto;
+}
+/* :is (y no :where) para ganarle a los estilos de títulos de .card, que vienen de dojo.css */
+.pv :is(h1, h2, h3) { margin: 0 0 8px; color: var(--pv-text); font-family: inherit; font-weight: 700; text-shadow: none; text-transform: none; letter-spacing: normal; line-height: 1.25; }
+.pv h2 { font-size: 22px; }
+.pv h3 { font-size: 17px; }
+.pv :where(p) { margin: 0 0 8px; }
+.pv :where(ul) { margin: 0 0 8px; padding-left: 20px; }
+.pv :where(button) {
+  font: inherit; font-size: 14px; color: var(--pv-text); background: var(--pv-btn);
+  border: 1px solid var(--pv-border); border-radius: 6px; padding: 5px 10px; margin: 2px 4px 2px 0; cursor: pointer;
+}
+.pv :where(button):hover { background: var(--pv-btn-hover); border-color: var(--pv-border-hover); color: var(--pv-text); box-shadow: none; }
+.pv :where(input, textarea) { font: inherit; font-size: 16px; color: var(--pv-text); background: var(--pv-bg); border: 1px solid var(--pv-border); border-radius: 6px; padding: 5px 8px; margin: 2px 4px 2px 0; }
+.pv :where([role="alert"]) { color: var(--pv-error); }
+.pv-error { color: var(--pv-error); font-family: var(--mono); white-space: pre-wrap; }
+.pv-label { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.pv-label button { padding: 4px 10px; }
+
+/* ---------- predicciones ---------- */
+.ask { margin-top: 14px; }
+.opts { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
+.opts button { text-align: left; font-size: 15px; padding: 10px 12px; }
+.opts button b { font-family: var(--mono); color: var(--neon); margin-right: 8px; }
+.opts button.right { border-color: var(--neon); background: var(--neon-dim); color: var(--neon); }
+.opts button.wrong { border-color: var(--red); background: var(--red-dim); color: var(--red); }
+.opts button:disabled { opacity: 1; cursor: default; }
+
+/* ---------- playground: editor a la izquierda, vista previa y consola a la derecha ---------- */
+.play .side-out { gap: 10px; }
+.play .side-out .pv { flex: 1.3; margin-top: 0; }
+.play #play-out { flex: 1; display: flex; flex-direction: column; min-height: 100px; }
+.play #play-out .console { flex: 1; margin-top: 0; }
+@media (max-width: 960px) {
+  .play .side-out .pv { flex: none; min-height: 220px; }
+  .play #play-out { flex: none; }
+  .play #play-out .console { height: 30dvh; }
+}

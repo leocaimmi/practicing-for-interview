@@ -1,5 +1,5 @@
 /* ==========================================================
-   Dojo de JavaScript · mismo tema negro + verde flúor que el de Linux
+   Estilos compartidos de los dojos (JavaScript, React): tema negro + verde flúor
    ========================================================== */
 :root {
   color-scheme: dark;
@@ -21,6 +21,7 @@
   --magenta: #d77bff;
   --mono: "Ubuntu Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
   --sans: "Ubuntu", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --pane-h: clamp(440px, calc(100dvh - 140px), 900px); /* alto de los paneles con scroll propio */
 }
 
 * { box-sizing: border-box; }
@@ -95,8 +96,10 @@ button:focus-visible, textarea:focus-visible, a:focus-visible, summary:focus-vis
 .q b { color: var(--neon); font-family: var(--mono); font-size: 15px; }
 
 /* ---------- lista lateral + tarjeta ---------- */
-.lay { display: grid; grid-template-columns: 290px minmax(0, 1fr); gap: 20px; align-items: start; }
-.list { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 12px); list-style: none; margin: 0; padding: 10px; display: flex; flex-direction: column; gap: 2px; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; }
+/* Lista y tarjeta tienen alto fijo y scrollean por dentro, como la consola del Dojo de Linux */
+.lay { display: grid; grid-template-columns: 290px minmax(0, 1fr); gap: 20px; height: var(--pane-h); }
+.list, .card { min-height: 0; overflow-y: auto; overscroll-behavior: contain; scrollbar-color: var(--line) transparent; }
+.list { position: relative; list-style: none; margin: 0; padding: 10px; display: flex; flex-direction: column; gap: 2px; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; }
 .list button { display: flex; align-items: center; gap: 10px; width: 100%; text-align: left; background: transparent; border: 1px solid transparent; padding: 7px 8px; border-radius: 7px; color: var(--muted); font-size: 14px; }
 .list button:hover { background: var(--panel2); color: var(--text); }
 .list .n { flex: none; width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; font-family: var(--mono); font-size: 13px; border: 1px solid var(--line); font-variant-numeric: tabular-nums; }
@@ -105,7 +108,7 @@ button:focus-visible, textarea:focus-visible, a:focus-visible, summary:focus-vis
 .list .cur .n { border-color: var(--neon); color: var(--neon); }
 .list .done.cur .n { color: #000; }
 
-.card { min-width: 0; padding: 20px; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; }
+.card { position: relative; min-width: 0; padding: 20px; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; }
 .kicker { margin: 0; color: var(--faint); font-family: var(--mono); font-size: 13px; }
 .card h2 { margin: 2px 0 8px; font-family: var(--mono); font-size: 24px; line-height: 1.2; color: var(--neon); }
 .card h3 { margin: 22px 0 8px; font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--neon); font-weight: 500; }
@@ -113,7 +116,7 @@ button:focus-visible, textarea:focus-visible, a:focus-visible, summary:focus-vis
 .desc p { margin: 0 0 8px; }
 .desc ul { margin: 0 0 8px; padding-left: 20px; }
 code { font-family: var(--mono); color: var(--neon); }
-.desc code, .q code, .why code, .tip code, .qa code, .cheat p code { background: var(--panel2); padding: 0 4px; border-radius: 4px; font-size: .95em; }
+.desc code, .q code, .why code, .tip code, .notes code { background: var(--panel2); padding: 0 4px; border-radius: 4px; font-size: .95em; }
 .row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
 .row .push { margin-left: auto; }
 
@@ -125,6 +128,7 @@ pre.code { margin: 0; padding: 14px 16px; overflow-x: auto; background: var(--te
 .h-fn { color: var(--neon); }
 .h-bi { color: var(--cyan); }
 .h-com { color: var(--faint); font-style: italic; }
+.h-tag { color: var(--cyan); }
 
 /* ---------- consola ---------- */
 .console { margin-top: 10px; max-height: 360px; overflow: auto; padding: 10px 14px; background: var(--term); border: 1px solid var(--line); border-radius: 8px; font-family: var(--mono); font-size: 15px; line-height: 1.45; }
@@ -172,28 +176,21 @@ ol.why li { margin-bottom: 6px; }
 .running { color: var(--muted); font-family: var(--mono); }
 
 /* ---------- playground ---------- */
-.play { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 20px; align-items: start; }
-.play .ed { min-height: 420px; }
-.play .console { margin-top: 0; min-height: 120px; max-height: 520px; }
+.play { display: grid; grid-template-columns: minmax(0, 1.8fr) minmax(0, 1fr); gap: 20px; height: var(--pane-h); }
+.play > div { display: flex; flex-direction: column; min-height: 0; }
+.play .ed { flex: 1; min-height: 0; resize: none; }
+.play .console { flex: 1; margin-top: 0; max-height: none; }
 .play .note { margin-top: 12px; font-size: 14px; }
 .play select { font: inherit; font-size: 13px; color: var(--text); background: var(--panel2); border: 1px solid var(--line); border-radius: 6px; padding: 7px 8px; }
 
 /* ---------- guía rápida ---------- */
-.cheat { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(460px, 100%), 1fr)); gap: 14px; }
-.cheat article { min-width: 0; padding: 16px; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; }
-.cheat h3 { margin: 0 0 10px; font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--neon); font-weight: 500; }
-.cheat pre.code { font-size: 14px; padding: 12px; }
-.cheat p { margin: 8px 0 0; color: var(--muted); font-size: 14px; }
+ul.notes { margin: 0; padding-left: 20px; color: var(--muted); }
+ul.notes li { margin-bottom: 6px; }
+ul.notes li::marker { color: var(--neon); }
 
 /* ---------- preguntas ---------- */
-.qa { max-width: 860px; }
-.qa h3 { margin: 22px 0 6px; font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--neon); font-weight: 500; }
-.qa h3:first-child { margin-top: 0; }
-.qa details { padding: 10px 0; border-bottom: 1px solid var(--line); }
-.qa summary { cursor: pointer; font-weight: 500; }
-.qa summary::marker { color: var(--neon); }
-.qa details p { margin: 8px 0 4px; color: var(--muted); font-size: 14px; }
-.qa pre.code { margin-top: 8px; font-size: 14px; }
+.say { padding: 12px 14px; background: var(--neon-dim); border: 1px solid var(--neon); border-radius: 8px; font-size: 16px; }
+.say code { background: #000; padding: 0 4px; border-radius: 4px; }
 
 footer { margin-top: 24px; color: var(--faint); font-size: 13px; }
 footer kbd { font-family: var(--mono); background: var(--panel2); border: 1px solid var(--line); border-radius: 4px; padding: 0 5px; color: var(--text); }
@@ -201,13 +198,16 @@ footer kbd { font-family: var(--mono); background: var(--panel2); border: 1px so
 /* ---------- responsive ---------- */
 @media (max-width: 960px) {
   .lay, .play { grid-template-columns: minmax(0, 1fr); }
-  .list { position: static; flex-direction: row; flex-wrap: wrap; gap: 6px; padding: 8px; }
+  .lay { grid-template-rows: auto minmax(0, 1fr); }
+  .list { flex-direction: row; overflow: visible; flex-wrap: wrap; gap: 6px; padding: 8px; }
   .list button { width: auto; padding: 2px; }
   .list .t { display: none; }
   .list .n { width: 34px; height: 34px; font-size: 14px; }
   .list .cur button { background: transparent; border-color: transparent; }
   .list .cur .n { border-width: 2px; box-shadow: 0 0 10px #39ff1488; }
-  .play .ed { min-height: 320px; }
+  .play { height: auto; }
+  .play .ed { flex: none; height: 55dvh; min-height: 320px; }
+  .play .console { flex: none; height: 40dvh; min-height: 200px; }
 }
 @media (max-width: 700px) {
   .flow { grid-template-columns: minmax(0, 1fr); }

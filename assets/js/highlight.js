@@ -1,10 +1,12 @@
-/* Resaltado de sintaxis mínimo: comentarios, strings, números, palabras clave y llamadas. */
+/* Resaltado de sintaxis mínimo: comentarios, strings, números, palabras clave, llamadas y etiquetas JSX. */
 const KEYWORDS = new Set(('const let var function return async await new if else for of in while do try catch finally ' +
   'throw class extends this typeof instanceof null undefined true false import export from default switch case ' +
   'break continue delete void yield super').split(' '));
-const BUILTINS = new Set('console Promise setTimeout clearTimeout setInterval clearInterval queueMicrotask fetch JSON Math Object Array Error Number String Date structuredClone'.split(' '));
+const BUILTINS = new Set(('console Promise setTimeout clearTimeout setInterval clearInterval queueMicrotask fetch JSON Math Object Array ' +
+  'Error Number String Date structuredClone React useState useEffect useRef useMemo useCallback useReducer useContext').split(' '));
 
-const TOKEN_RE = /(\/\/[^\n]*|\/\*[\s\S]*?\*\/)|(`(?:\\[\s\S]|[^`\\])*`|'(?:\\.|[^'\\\n])*'|"(?:\\.|[^"\\\n])*")|(\b\d+(?:\.\d+)?\b)|([A-Za-z_$][\w$]*)|(=>)/g;
+/* Grupos: 1 comentario, 2 string, 3 número, 4 identificador, 5 flecha, 6 etiqueta JSX (<div, </Lista, />) */
+const TOKEN_RE = /(\/\/[^\n]*|\/\*[\s\S]*?\*\/)|(`(?:\\[\s\S]|[^`\\])*`|'(?:\\.|[^'\\\n])*'|"(?:\\.|[^"\\\n])*")|(\b\d+(?:\.\d+)?\b)|([A-Za-z_$][\w$]*)|(=>)|(<\/?[A-Za-z][\w.]*|\/>)/g;
 
 function highlight(src) {
   let out = '', last = 0, m;
@@ -17,6 +19,7 @@ function highlight(src) {
     if (m[1]) cls = 'h-com';
     else if (m[2]) cls = 'h-str';
     else if (m[3]) cls = 'h-num';
+    else if (m[6]) cls = 'h-tag';
     else if (m[5] || KEYWORDS.has(t)) cls = 'h-kw';
     else if (BUILTINS.has(t)) cls = 'h-bi';
     else if (src[last] === '(') cls = 'h-fn';
@@ -31,12 +34,4 @@ const md = (s) => esc(s).replace(/`([^`]+)`/g, '<code>$1</code>');
 /* Saca los comentarios pero respeta los strings (para chequear el código sin que cuente lo comentado) */
 function stripComments(src) {
   return src.replace(/(`(?:\\[\s\S]|[^`\\])*`|'(?:\\.|[^'\\\n])*'|"(?:\\.|[^"\\\n])*")|\/\/[^\n]*|\/\*[\s\S]*?\*\//g, (m, str) => str || '');
-}
-
-/* Bloques estáticos del HTML con data-hl: el texto se reemplaza por su versión resaltada */
-function highlightStatic(root = document) {
-  $$('pre[data-hl]', root).forEach((pre) => {
-    pre.innerHTML = highlight(pre.textContent.replace(/^\n/, ''));
-    pre.classList.add('code');
-  });
 }

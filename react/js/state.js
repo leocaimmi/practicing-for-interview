@@ -1,14 +1,14 @@
-/* Estado del Dojo de JavaScript: progreso guardado en localStorage. */
-const STORAGE_KEY = 'dojo-js-v1';
+/* Estado del Dojo de React: progreso guardado en localStorage. */
+const STORAGE_KEY = 'dojo-react-v1';
 
 function freshState() {
   return {
-    tab: 'loop',      // pestaña abierta
-    loop: 0,          // ejercicio de event loop actual
-    loopDone: {},     // índice → true
+    tab: 'kata',      // pestaña abierta
     kata: 0,          // kata actual
     kataDone: {},     // id → true
     drafts: {},       // id de kata → código escrito
+    pred: 0,          // predicción abierta
+    predDone: {},     // índice → true (acertada)
     play: null,       // código del playground (null = ejemplo por defecto)
     guide: 0,         // tema abierto de la guía rápida
     guideSeen: {},    // índice → true (temas ya leídos)

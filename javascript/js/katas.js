@@ -501,56 +501,6 @@ conTimeout(lenta, 200)
   }
 ];
 
-/* ---------- tester ---------- */
-const TIMEOUT = Symbol('timeout');
-const within = (value, ms = 2000) => Promise.race([
-  Promise.resolve(value),
-  new Promise((_, reject) => setTimeout(() => reject(TIMEOUT), ms))
-]);
-
-function same(a, b) {
-  if (Object.is(a, b)) return true;
-  if (!a || !b || typeof a !== 'object' || typeof b !== 'object') return false;
-  if (Array.isArray(a) !== Array.isArray(b)) return false;
-  const ka = Object.keys(a), kb = Object.keys(b);
-  return ka.length === kb.length && ka.every((k) => same(a[k], b[k]));
-}
-
-const show = (v) => (typeof v === 'string' ? "'" + v + "'" : fmt(v));
-const thrown = (e) => (e === TIMEOUT ? 'La promesa nunca se resolvió (¿te olvidaste de llamar a resolve?)' : 'Tiró ' + fmt(e));
-
-function makeTester(results, src) {
-  const code = stripComments(src);
-  return {
-    async eq(label, fn, expected) {
-      try {
-        const got = await within(fn());
-        const pass = same(got, expected);
-        results.push({ label, pass, detail: pass ? '' : 'Esperaba ' + show(expected) + ' y llegó ' + show(got) });
-      } catch (e) { results.push({ label, pass: false, detail: thrown(e) }); }
-    },
-    async ok(label, fn, hint = '') {
-      try {
-        const pass = !!(await within(fn()));
-        results.push({ label, pass, detail: pass ? '' : hint });
-      } catch (e) { results.push({ label, pass: false, detail: thrown(e) }); }
-    },
-    async rejects(label, fn, message) {
-      try {
-        const got = await within(fn());
-        results.push({ label, pass: false, detail: 'Resolvió con ' + show(got) + ' en vez de rechazar' });
-      } catch (e) {
-        const pass = e !== TIMEOUT && e instanceof Error && e.message.includes(message);
-        results.push({ label, pass, detail: pass ? '' : e === TIMEOUT ? thrown(e) : 'Rechazó con ' + fmt(e) + ' y esperaba un Error con "' + message + '"' });
-      }
-    },
-    src(label, re, want = true, hint = '') {
-      const pass = re.test(code) === want;
-      results.push({ label, pass, detail: pass ? '' : hint });
-    }
-  };
-}
-
 /* ---------- pantalla ---------- */
 let kataRes = null;   // null | { running: true } | { results, logs }
 let kataSol = false;  // solución visible
@@ -564,14 +514,13 @@ function openKata(i) {
   kataSol = false;
   kataRun++;
   renderKata();
+  $('#kata-main').scrollTop = 0;
 }
 
 function renderKataList() {
-  $('#kata-list').innerHTML = KATAS.map((k, i) => {
-    const cls = (S.kataDone[k.id] ? 'done' : '') + (i === S.kata ? ' cur' : '');
-    return '<li class="' + cls + '"><button type="button" data-i="' + i + '" aria-label="Kata ' + (i + 1) + ': ' + esc(k.t) + '">' +
-      '<span class="n">' + (S.kataDone[k.id] ? '✓' : i + 1) + '</span><span class="t">' + esc(k.t) + '</span></button></li>';
-  }).join('');
+  const list = $('#kata-list');
+  list.innerHTML = listHTML(KATAS, S.kata, (k) => S.kataDone[k.id], 'Kata');
+  keepInView(list, $('.cur', list));
 }
 
 function renderKata() {
@@ -657,6 +606,7 @@ async function runKata() {
   }
   kataRes = { results, logs };
   renderKataOut();
+  scrollInside($('#kata-main'), $('#kata-out'));
 }
 
 $('#kata-list').addEventListener('click', (e) => {
@@ -669,8 +619,8 @@ $('#kata-main').addEventListener('click', (e) => {
   if (!b) return;
   const k = KATAS[S.kata];
   if (b.dataset.act === 'run') runKata();
-  if (b.dataset.act === 'sol') { kataSol = !kataSol; renderKataSol(); }
-  if (b.dataset.act === 'next') { openKata(S.kata + 1); window.scrollTo({ top: $('#tab-kata').offsetTop - 12 }); }
+  if (b.dataset.act === 'sol') { kataSol = !kataSol; renderKataSol(); if (kataSol) scrollInside($('#kata-main'), $('#kata-sol')); }
+  if (b.dataset.act === 'next') openKata(S.kata + 1);
   if (b.dataset.act === 'restore') {
     /* Dos clics para no perder lo escrito por accidente */
     if (b.dataset.armed !== '1') {

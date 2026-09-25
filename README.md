@@ -11,7 +11,7 @@ Tomé la lista de requisitos, marqué lo que tenía flojo y armé algo para prac
 |---|---|---|
 | [Linux · Dojo de terminal](linux/) | ✅ listo | Navegación, archivos, pipes, redirecciones, permisos, procesos, apt, nano |
 | [JavaScript ES6+ · Dojo de JavaScript](javascript/) | ✅ listo | Event loop, promesas, async/await, arrow functions, fetch |
-| React | en cola | Props, estado, hooks |
+| [React · Dojo de React](react/) | ✅ listo | Props, estado, hooks, useEffect con fetch, cleanup |
 | SQL | en cola | JOINs, claves foráneas, agregaciones |
 | APIs REST y JSON | en cola | Verbos HTTP, códigos de estado, idempotencia |
 | Git | en cola | Branch, merge vs rebase, pull requests |
@@ -60,23 +60,35 @@ La oferta aclara que usan IA pero esperan que puedas **comprender, justificar y 
 - **14 katas con tests** que corren en el navegador: arrow functions, destructuring y spread, `map`/`filter`/`reduce`, closures, `new Promise`, reject, promisify, `.then` → `async/await`, `try/catch`, `Promise.all`, `fetch` con `res.ok` y timeout con `Promise.race`. Los tests detectan los errores típicos: pedidos en serie en vez de paralelo, `return` sin `await` dentro del `try`, `fetch` sin revisar `res.ok`.
 - Cada kata tiene una solución de referencia y **"Cómo lo defendés"**: lo que hay que poder decir en voz alta.
 - **Playground** con `fetch` real contra jsonplaceholder y `await` en el nivel superior.
-- **Guía rápida** de sintaxis y **preguntas de entrevista**.
+- **Guía rápida** por temas: qué es, cuándo se usa, un ejemplo que se ejecuta y muestra qué imprime, y un botón para probarlo en el playground.
+- **Preguntas de entrevista** como tarjetas: primero la respondés en voz alta y después ves la respuesta corta, una explicación simple y un ejemplo.
+- Cada panel scrollea por dentro, como la consola del Dojo de Linux: la página no se mueve.
 
-### Estructura
+## Dojo de React
+
+Componentes escritos a mano, con tests que los montan y los usan como lo haría una persona: hacen clic, escriben en los inputs y envían formularios. React 18 y Babel se cargan desde un CDN y el JSX se compila en el navegador, así que sigue sin haber build.
+
+- **10 katas con tests**: props, listas y `key`, `useState`, inputs controlados y datos derivados, formularios que le avisan al padre, renderizado condicional, estado con arrays sin mutar, `useEffect` con `fetch` (cargando, error y datos), cleanup de un intervalo y respuestas que llegan desordenadas. Los tests detectan la key con índice, el `push` sobre el estado, el loop infinito por falta de `[]`, el closure viejo en `setInterval`, la falta de cleanup y la carrera entre pedidos.
+- **9 predicciones de "¿qué pasa si…?"**: las trampas clásicas (tres `setState` seguidos, mutar un array, `useEffect` sin dependencias, key con índice, el `0` que aparece solo), con la demo funcionando para comprobarlo.
+- **Playground** con vista previa en vivo y consola.
+- **Guía rápida** y **preguntas** con el mismo formato que en JavaScript, pero con el resultado renderizado.
+
+## Código compartido
+
+Los dos dojos comparten estilos y herramientas en `assets/`:
 
 ```
-javascript/
-├── index.html            # pestañas, guía rápida y preguntas
-├── css/styles.css
+assets/
+├── dojo.css              # tema, paneles con scroll propio, editor, consola, tests
 └── js/
-    ├── state.js          # progreso y borradores en localStorage
-    ├── highlight.js      # resaltado de sintaxis
+    ├── dom.js            # $, esc, listas laterales, scroll dentro de los paneles, alto de los paneles
+    ├── highlight.js      # resaltado de sintaxis (incluye JSX)
     ├── runner.js         # ejecuta código, captura console.* y espera timers/promesas
     ├── editor.js         # textarea con Tab, sangría automática y Ctrl+Enter
-    ├── loop.js           # ejercicios de event loop
-    ├── katas.js          # katas, mocks (api, leerArchivo, fetch) y tester
-    ├── play.js           # playground
-    └── main.js           # arranque
+    └── tester.js         # chequeos de las katas (eq, ok, rejects, src)
+
+javascript/js/            # state, loop, katas, play, guide, questions, main
+react/js/                 # state, jsx (compila y monta), katas, predict, play, guide, questions, main
 ```
 
 ## Correr local

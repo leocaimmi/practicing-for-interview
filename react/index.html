@@ -3,59 +3,52 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Dojo de JavaScript</title>
-  <meta name="description" content="Ejercicios de event loop, katas con tests y guía rápida para repasar JavaScript ES6+: promesas, async/await y arrow functions.">
+  <title>Dojo de React</title>
+  <meta name="description" content="Katas con tests, predicciones, playground con vista previa, guía rápida y preguntas para repasar React: props, estado, hooks y useEffect.">
   <meta name="theme-color" content="#000000">
   <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700&family=Ubuntu+Mono:wght@400;700&display=swap">
   <link rel="stylesheet" href="../assets/dojo.css">
+  <link rel="stylesheet" href="css/react.css">
 </head>
 <body>
 <div class="wrap">
   <header class="top">
     <div>
       <a class="back" href="../">← practicing-for-interview</a>
-      <p class="eyebrow">Repaso para la entrevista · JavaScript ES6+</p>
-      <h1>Dojo de JavaScript<span class="cur" aria-hidden="true"></span></h1>
-      <p class="lede">Promesas, async/await, arrow functions y event loop. Sin autocompletado ni IA: escribís vos, corrés los tests y después lo explicás en voz alta como en la entrevista.</p>
+      <p class="eyebrow">Repaso para la entrevista · React</p>
+      <h1>Dojo de React<span class="cur" aria-hidden="true"></span></h1>
+      <p class="lede">Props, estado, hooks y useEffect con fetch. Escribís componentes a mano, los tests los montan y los prueban como lo haría un usuario, y ves el resultado en vivo.</p>
     </div>
     <div class="stats">
-      <div><strong id="st-loop">0/0</strong><span>event loop</span></div>
       <div><strong id="st-kata">0/0</strong><span>katas</span></div>
+      <div><strong id="st-pred">0/0</strong><span>predicciones</span></div>
       <div><strong id="st-q">0/0</strong><span>preguntas</span></div>
     </div>
   </header>
 
   <nav class="tabs" role="tablist" aria-label="Secciones">
-    <button type="button" role="tab" data-tab="loop" aria-selected="true">Event loop</button>
-    <button type="button" role="tab" data-tab="kata" aria-selected="false">Katas</button>
+    <button type="button" role="tab" data-tab="kata" aria-selected="true">Katas</button>
+    <button type="button" role="tab" data-tab="pred" aria-selected="false">¿Qué pasa si…?</button>
     <button type="button" role="tab" data-tab="play" aria-selected="false">Playground</button>
     <button type="button" role="tab" data-tab="guia" aria-selected="false">Guía rápida</button>
     <button type="button" role="tab" data-tab="pre" aria-selected="false">Preguntas</button>
   </nav>
 
   <main>
-    <section id="tab-loop" class="pane" aria-label="Event loop">
-      <details class="rule">
-        <summary>La regla que resuelve todos estos ejercicios</summary>
-        <div class="flow">
-          <div class="q"><b>1 · Pila</b><span>Todo el código sincrónico, de arriba abajo. Incluye el cuerpo de <code>new Promise(...)</code> y el de una función <code>async</code> hasta su primer <code>await</code>.</span></div>
-          <div class="q"><b>2 · Microtareas</b><span><code>.then</code>, <code>.catch</code>, <code>.finally</code>, lo que sigue a un <code>await</code> y <code>queueMicrotask</code>. Se vacía la cola entera, incluso lo que se agrega mientras tanto.</span></div>
-          <div class="q"><b>3 · Una macrotarea</b><span><code>setTimeout</code>, <code>setInterval</code>, eventos del DOM, I/O. Corre una sola y se vuelve al paso 2.</span></div>
-        </div>
-      </details>
-      <div class="lay">
-        <ol class="list" id="loop-list" aria-label="Ejercicios de event loop"></ol>
-        <article class="card" id="loop-main" aria-live="polite"></article>
-      </div>
-    </section>
-
-    <section id="tab-kata" class="pane" aria-label="Katas" hidden>
+    <section id="tab-kata" class="pane" aria-label="Katas">
       <div class="lay">
         <ol class="list" id="kata-list" aria-label="Katas"></ol>
         <article class="card" id="kata-main"></article>
+      </div>
+    </section>
+
+    <section id="tab-pred" class="pane" aria-label="¿Qué pasa si…?" hidden>
+      <div class="lay">
+        <ol class="list" id="pred-list" aria-label="Predicciones"></ol>
+        <article class="card" id="pred-main" aria-live="polite"></article>
       </div>
     </section>
 
@@ -76,8 +69,13 @@
     </section>
   </main>
 
-  <footer><kbd>Ctrl</kbd>+<kbd>Enter</kbd> corre el código · <kbd>Tab</kbd> indenta dentro del editor (<kbd>Esc</kbd> y después <kbd>Tab</kbd> para salir) · el progreso se guarda en este navegador</footer>
+  <footer><kbd>Ctrl</kbd>+<kbd>Enter</kbd> corre el código · <kbd>Tab</kbd> indenta dentro del editor (<kbd>Esc</kbd> y después <kbd>Tab</kbd> para salir) · no hace falta escribir los <code>import</code>: los hooks ya están disponibles · el progreso se guarda en este navegador</footer>
 </div>
+
+<!-- React 18 y Babel desde CDN: el JSX se compila en el navegador, sin build -->
+<script src="https://cdn.jsdelivr.net/npm/react@18.3.1/umd/react.development.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/react-dom@18.3.1/umd/react-dom.development.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/@babel/standalone@7.26.10/babel.min.js" defer></script>
 
 <script src="../assets/js/dom.js" defer></script>
 <script src="js/state.js" defer></script>
@@ -85,8 +83,9 @@
 <script src="../assets/js/runner.js" defer></script>
 <script src="../assets/js/editor.js" defer></script>
 <script src="../assets/js/tester.js" defer></script>
-<script src="js/loop.js" defer></script>
+<script src="js/jsx.js" defer></script>
 <script src="js/katas.js" defer></script>
+<script src="js/predict.js" defer></script>
 <script src="js/play.js" defer></script>
 <script src="js/guide.js" defer></script>
 <script src="js/questions.js" defer></script>

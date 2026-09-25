@@ -213,6 +213,7 @@ async function openLoop(i) {
   loopOut = null; loopAns = []; loopState = 'idle';
   const run = ++loopRun;
   renderLoop();
+  $('#loop-main').scrollTop = 0;
   const { logs } = await runCode(LOOP[i].code);
   if (run !== loopRun) return;
   loopOut = logs.map((l) => l.text);
@@ -221,11 +222,9 @@ async function openLoop(i) {
 }
 
 function renderLoopList() {
-  $('#loop-list').innerHTML = LOOP.map((ex, i) => {
-    const cls = (S.loopDone[i] ? 'done' : '') + (i === S.loop ? ' cur' : '');
-    return '<li class="' + cls + '"><button type="button" data-i="' + i + '" aria-label="Ejercicio ' + (i + 1) + ': ' + esc(ex.t) + '">' +
-      '<span class="n">' + (S.loopDone[i] ? '✓' : i + 1) + '</span><span class="t">' + esc(ex.t) + '</span></button></li>';
-  }).join('');
+  const list = $('#loop-list');
+  list.innerHTML = listHTML(LOOP, S.loop, (ex, i) => S.loopDone[i], 'Ejercicio');
+  keepInView(list, $('.cur', list));
 }
 
 function renderLoop() {
@@ -289,4 +288,5 @@ $('#loop-main').addEventListener('click', (e) => {
   if (act === 'next') { openLoop(S.loop + 1); return; }
   if (act === 'play') { openInPlayground(LOOP[S.loop].code); return; }
   renderLoop();
+  if (act === 'check' || act === 'give') scrollInside($('#loop-main'), $('#loop-main .res'));
 });
