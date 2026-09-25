@@ -44,6 +44,8 @@ C.date = () => ({ out: new Date().toString().replace(/ GMT.*/, '') + '\n' });
 C.uname = (a) => ({ out: (a.includes('-a') ? 'Linux dessa 6.8.0-45-generic #45-Ubuntu SMP PREEMPT_DYNAMIC x86_64 x86_64 x86_64 GNU/Linux' : 'Linux') + '\n' });
 C.history = () => ({ out: S.hist.map((h, i) => String(i + 1).padStart(5) + '  ' + h).join('\n') + '\n' });
 C.clear = () => { outEl.innerHTML = ''; return {}; };
+/* cls es de Windows (cmd/PowerShell); en Linux no existe, pero se deja como alias de clear */
+C.cls = C.clear;
 C.env = () => ({ out: `USER=leo\nHOME=${HOME}\nPWD=${S.cwd}\nSHELL=/bin/bash\nLANG=es_AR.UTF-8\nEDITOR=nano\nPATH=/usr/local/bin:/usr/bin:/bin\n` });
 
 /* ---------- procesos ---------- */
