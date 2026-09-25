@@ -564,14 +564,13 @@ function openKata(i) {
   kataSol = false;
   kataRun++;
   renderKata();
+  $('#kata-main').scrollTop = 0;
 }
 
 function renderKataList() {
-  $('#kata-list').innerHTML = KATAS.map((k, i) => {
-    const cls = (S.kataDone[k.id] ? 'done' : '') + (i === S.kata ? ' cur' : '');
-    return '<li class="' + cls + '"><button type="button" data-i="' + i + '" aria-label="Kata ' + (i + 1) + ': ' + esc(k.t) + '">' +
-      '<span class="n">' + (S.kataDone[k.id] ? '✓' : i + 1) + '</span><span class="t">' + esc(k.t) + '</span></button></li>';
-  }).join('');
+  const list = $('#kata-list');
+  list.innerHTML = listHTML(KATAS, S.kata, (k) => S.kataDone[k.id], 'Kata');
+  keepInView(list, $('.cur', list));
 }
 
 function renderKata() {
@@ -657,6 +656,7 @@ async function runKata() {
   }
   kataRes = { results, logs };
   renderKataOut();
+  scrollInside($('#kata-main'), $('#kata-out'));
 }
 
 $('#kata-list').addEventListener('click', (e) => {
@@ -669,8 +669,8 @@ $('#kata-main').addEventListener('click', (e) => {
   if (!b) return;
   const k = KATAS[S.kata];
   if (b.dataset.act === 'run') runKata();
-  if (b.dataset.act === 'sol') { kataSol = !kataSol; renderKataSol(); }
-  if (b.dataset.act === 'next') { openKata(S.kata + 1); window.scrollTo({ top: $('#tab-kata').offsetTop - 12 }); }
+  if (b.dataset.act === 'sol') { kataSol = !kataSol; renderKataSol(); if (kataSol) scrollInside($('#kata-main'), $('#kata-sol')); }
+  if (b.dataset.act === 'next') openKata(S.kata + 1);
   if (b.dataset.act === 'restore') {
     /* Dos clics para no perder lo escrito por accidente */
     if (b.dataset.armed !== '1') {

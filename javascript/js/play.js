@@ -113,6 +113,5 @@ async function runPlayground() {
 function openInPlayground(code) {
   loadPlayground(code);
   showTab('play');
-  window.scrollTo({ top: $('#tab-play').offsetTop - 12 });
   $('#play-ed').focus();
 }
