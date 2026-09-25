@@ -25,6 +25,9 @@ function highlight(src) {
   return out + esc(src.slice(last));
 }
 
+/* Texto con `código` entre backticks → HTML con <code> (para enunciados y explicaciones) */
+const md = (s) => esc(s).replace(/`([^`]+)`/g, '<code>$1</code>');
+
 /* Saca los comentarios pero respeta los strings (para chequear el código sin que cuente lo comentado) */
 function stripComments(src) {
   return src.replace(/(`(?:\\[\s\S]|[^`\\])*`|'(?:\\.|[^'\\\n])*'|"(?:\\.|[^"\\\n])*")|\/\/[^\n]*|\/\*[\s\S]*?\*\//g, (m, str) => str || '');
