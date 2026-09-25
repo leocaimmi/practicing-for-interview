@@ -107,6 +107,12 @@ function renderMissions() {
   $('#fin').innerHTML = doneCount === total
     ? '<div class="fin"><strong>Completaste las ' + total + '.</strong> Ahora reiniciá el sistema y hacelas de memoria, sin abrir las pistas. Si te salen de corrido, Linux básico ya está.</div>'
     : '';
+
+  /* Mantiene la misión actual a la vista dentro del panel con scroll */
+  const box = $('#tab-mis'), cur = $('#missions .cur');
+  if (cur && (cur.offsetTop < box.scrollTop || cur.offsetTop + cur.offsetHeight > box.scrollTop + box.clientHeight)) {
+    box.scrollTop = cur.offsetTop - 8;
+  }
 }
 
 $('#missions').addEventListener('click', (e) => {
