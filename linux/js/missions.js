@@ -4,6 +4,11 @@ const ranOk = (name, pred) => lastRan.some((r) => r.name === name && !r.code && 
 const isFile = (p) => { const n = getNode(p); return !!n && n.type === 'file'; };
 const isDir = (p) => { const n = getNode(p); return !!n && n.type === 'dir'; };
 
+/* Error típico: crear notas.md con mkdir la convierte en carpeta y ya no se puede escribir como archivo */
+const notasEsCarpeta = () => isDir(HOME + '/entrevista/notas.md')
+  ? 'entrevista/notas.md quedó como carpeta, porque mkdir crea carpetas. Borrala con "rmdir ~/entrevista/notas.md" (funciona desde cualquier carpeta) y creá el archivo con touch.'
+  : '';
+
 const MISSIONS = [
   { t: '¿Dónde estoy?', d: 'Mostrá la ruta de la carpeta en la que estás parado.', c: 'pwd',
     w: 'print working directory: devuelve la ruta absoluta. Arrancás en tu home, /home/leo.',
@@ -24,10 +29,10 @@ const MISSIONS = [
     w: 'mkdir -p a/b/c crea toda la cadena de una sola vez.',
     ok: () => isDir(HOME + '/entrevista') },
   { t: 'Creá un archivo vacío', d: 'Adentro de entrevista, creá notas.md.', c: 'touch entrevista/notas.md',
-    w: 'touch crea un archivo vacío (o actualiza la fecha si ya existe). Fijate que usaste una ruta relativa sin entrar a la carpeta.',
-    ok: () => isFile(HOME + '/entrevista/notas.md') },
+    w: 'touch crea un archivo vacío (o actualiza la fecha si ya existe). Desde el home usás la ruta relativa entrevista/notas.md; si ya entraste con cd entrevista, alcanza con touch notas.md.',
+    ok: () => isFile(HOME + '/entrevista/notas.md'), warn: notasEsCarpeta },
   { t: 'Escribí en el archivo', d: 'Mandá un texto a notas.md con echo y redirección.', c: 'echo "Lunes 15:20 Catamarca 3265" > entrevista/notas.md',
-    w: '> pisa el contenido. >> agrega al final. Probá después con >> para sumar una línea.',
+    w: '> pisa el contenido. >> agrega al final. Probá después con >> para sumar una línea.', warn: notasEsCarpeta,
     ok: () => { const n = getNode(HOME + '/entrevista/notas.md'); return !!n && n.content.trim() !== ''; } },
   { t: 'Abrí y leé el archivo', d: 'Mostrá el contenido de notas.md.', c: 'cat entrevista/notas.md',
     w: 'cat imprime todo. Para archivos largos, less (paginado) o head/tail.',
@@ -68,6 +73,7 @@ const MISSIONS = [
 ];
 
 let hintOpen = false;
+let lastWarn = '';   // último aviso mostrado, para no repetirlo en cada comando
 
 function nextPending(from) {
   let i = from;
@@ -83,7 +89,28 @@ function checkMissions() {
     addLine('o', '<span class="c-ok">✓ Misión ' + (S.mission + 1) + ' completa: ' + esc(MISSIONS[S.mission].t) + '</span>');
     S.mission = nextPending(S.mission + 1);
   }
-  if (advanced) { hintOpen = false; renderMissions(); scrollDown(); }
+  if (advanced) { hintOpen = false; lastWarn = ''; renderMissions(); scrollDown(); return; }
+
+  /* Si la misión actual quedó trabada por un error conocido, se avisa una sola vez */
+  const m = MISSIONS[S.mission];
+  const warn = m && m.warn ? m.warn() : '';
+  if (warn && warn !== lastWarn) addLine('h', esc('Pista: ' + warn));
+  lastWarn = warn;
+}
+
+/* Pista cuando una ruta relativa falla porque ya estás parado adentro de esa carpeta:
+   estando en ~/entrevista, "entrevista/notas.md" se busca en ~/entrevista/entrevista/notas.md */
+function pathHint() {
+  const here = S.cwd.split('/').pop();
+  for (const e of lastErrs) {
+    const m = e.match(/(?:'([^']+)'|([^\s:']+)): No such file or directory/);
+    const path = m && (m[1] || m[2]);
+    if (!path || path.startsWith('/') || path.split('/')[0] !== here) continue;
+    const rest = path.slice(here.length + 1);
+    addLine('h', esc('Pista: ya estás adentro de ' + tildify(S.cwd) + '. Una ruta relativa se busca desde donde estás, así que "' + path +
+      '" apunta a ' + tildify(norm(path)) + '. Probá con "' + (rest || '.') + '" o volvé al home con cd ..'));
+    return;
+  }
 }
 
 function renderMissions() {
