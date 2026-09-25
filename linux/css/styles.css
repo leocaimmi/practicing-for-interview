@@ -20,6 +20,7 @@
   --magenta: #d77bff;
   --mono: "Ubuntu Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
   --sans: "Ubuntu", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --screen-h: clamp(380px, 68vh, 700px); /* alto de la consola y de la vista árbol */
 }
 
 * { box-sizing: border-box; }
@@ -90,7 +91,7 @@ button:focus-visible, input:focus-visible, textarea:focus-visible, a:focus-visib
   content: ""; position: absolute; inset: 0; pointer-events: none;
   background: repeating-linear-gradient(to bottom, transparent 0 2px, #ffffff05 2px 3px);
 }
-.screen { height: clamp(380px, 68vh, 700px); overflow-y: auto; padding: 12px 14px 18px; font-family: var(--mono); font-size: 16px; line-height: 1.35; cursor: text; scrollbar-color: var(--line) transparent; }
+.screen { height: var(--screen-h); overflow-y: auto; padding: 12px 14px 18px; font-family: var(--mono); font-size: 16px; line-height: 1.35; cursor: text; scrollbar-color: var(--line) transparent; }
 #out .o, #out .e, #out .p, #out .i, #out .h { white-space: pre-wrap; overflow-wrap: anywhere; }
 #out .e { color: var(--red); }
 #out .i { color: var(--faint); }
@@ -107,6 +108,45 @@ button:focus-visible, input:focus-visible, textarea:focus-visible, a:focus-visib
 .c-file { color: var(--magenta); }
 .c-num { color: var(--yellow); }
 .c-ok { color: var(--neon); text-shadow: var(--neon-glow); }
+
+/* ---------- toggle terminal / árbol (discreto, en la barra) ---------- */
+.vt { display: flex; gap: 2px; }
+.vt button { background: transparent; border: 0; border-radius: 4px; padding: 2px 7px; font-family: var(--mono); font-size: 12px; color: var(--faint); }
+.vt button:hover { color: var(--text); }
+.vt button[aria-selected="true"] { color: var(--neon); background: var(--neon-dim); }
+
+/* ---------- vista árbol ---------- */
+.tree { height: var(--screen-h); overflow: auto; padding: 12px 14px 18px; font-family: var(--mono); font-size: 15px; line-height: 1.5; scrollbar-color: var(--line) transparent; }
+.tree[hidden], .screen[hidden] { display: none; }
+.t-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; gap: 10px; padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px dashed var(--line); }
+.t-where b { color: var(--cyan); }
+.t-where span { display: block; color: var(--faint); font-size: 13px; }
+.t-opts { display: flex; flex-wrap: wrap; gap: 6px; }
+.t-opts button { font-family: var(--mono); font-size: 12px; padding: 4px 8px; }
+.t-opts button[aria-pressed="true"] { border-color: var(--neon); color: var(--neon); }
+.t-note { margin: 0 0 8px; color: var(--yellow); font-size: 13px; }
+.tl { white-space: pre; padding: 0 6px; border-radius: 4px; width: max-content; min-width: 100%; }
+.tl[data-path] { cursor: pointer; }
+.tl[data-path]:hover { background: var(--panel2); }
+.tl.cur { background: var(--neon-dim); }
+.t-pre { color: var(--faint); }
+.t-dir { color: var(--cyan); font-weight: 700; }
+.t-file { color: var(--text); }
+.t-exe { color: var(--neon); font-weight: 700; }
+.t-path { text-decoration: underline dotted; text-underline-offset: 3px; }
+.t-more { color: var(--faint); }
+.t-here { margin-left: 12px; color: var(--yellow); font-weight: 700; }
+.t-made { margin-left: 12px; color: var(--magenta); font-size: 13px; }
+.t-legend { margin: 12px 0 0; color: var(--faint); font-size: 13px; }
+.t-log { margin-top: 14px; padding-top: 10px; border-top: 1px dashed var(--line); }
+.t-log h4 { margin: 0 0 6px; font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--neon); font-weight: 500; }
+.t-log ul { list-style: none; margin: 0; padding: 0; }
+.t-log li { font-size: 14px; }
+.t-log li b { display: inline-block; width: 1.2em; }
+.t-log li.add b { color: var(--neon); }
+.t-log li.del b { color: var(--red); }
+.t-log li code { margin-left: 8px; color: var(--faint); }
+.t-log p { margin: 0; color: var(--faint); font-size: 14px; }
 
 .keys { display: none; gap: 6px; padding: 8px 10px; background: #050805; border-top: 1px solid var(--line); overflow-x: auto; -webkit-overflow-scrolling: touch; }
 .keys button { font-family: var(--mono); font-size: 15px; padding: 7px 12px; flex: none; }
@@ -136,7 +176,7 @@ button:focus-visible, input:focus-visible, textarea:focus-visible, a:focus-visib
 /* El contenido de cada pestaña scrollea dentro del panel, igual que la consola */
 #tab-mis, #tab-chu, #tab-pre {
   position: relative;
-  max-height: calc(clamp(380px, 68vh, 700px) - 105px);
+  max-height: calc(var(--screen-h) - 105px);
   overflow-y: auto;
   overscroll-behavior: contain;
   padding-right: 6px;
@@ -179,7 +219,7 @@ footer kbd { font-family: var(--mono); background: var(--panel2); border: 1px so
 @media (max-width: 960px) {
   .grid { grid-template-columns: minmax(0, 1fr); }
   .term { position: relative; top: 0; }
-  .screen { height: clamp(340px, 58vh, 560px); }
+  :root { --screen-h: clamp(340px, 58vh, 560px); }
 }
 @media (max-width: 560px) {
   .top { align-items: stretch; }
@@ -198,6 +238,7 @@ footer kbd { font-family: var(--mono); background: var(--panel2); border: 1px so
 }
 @media (hover: none) {
   .keys { display: flex; }
+  .keys.off { display: none; }
 }
 @media (prefers-reduced-motion: reduce) {
   h1 .cur { animation: none; }
