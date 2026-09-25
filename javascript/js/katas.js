@@ -30,7 +30,33 @@ function makeMocks() {
     else callback(new Error("ENOENT: no such file or directory, open '" + nombre + "'"));
   }, 30);
 
-  return { api, leerArchivo };
+  /* fetch de mentira con la forma de una Response real: ok, status, json() */
+  const POSTS = {
+    1: [
+      { userId: 1, id: 1, title: 'sunt aut facere repellat provident' },
+      { userId: 1, id: 2, title: 'qui est esse' },
+      { userId: 1, id: 3, title: 'ea molestias quasi exercitationem' }
+    ],
+    2: [{ userId: 2, id: 11, title: 'et ea vero quia laudantium autem' }]
+  };
+  const pedidos = [];
+  const fetch = (url) => {
+    pedidos.push(String(url));
+    const m = String(url).match(/\/posts\?userId=(\d+)/);
+    const id = m ? +m[1] : NaN;
+    const status = id === 0 ? 500 : m ? 200 : 404;
+    const body = status === 200 ? POSTS[id] || [] : { error: status === 500 ? 'Internal Server Error' : 'Not Found' };
+    return new Promise((resolve) => setTimeout(() => resolve({
+      ok: status >= 200 && status < 300,
+      status,
+      statusText: { 200: 'OK', 404: 'Not Found', 500: 'Internal Server Error' }[status],
+      json: async () => JSON.parse(JSON.stringify(body)),
+      text: async () => JSON.stringify(body)
+    }), 40));
+  };
+  fetch.pedidos = pedidos;
+
+  return { api, leerArchivo, fetch };
 }
 
 const KATAS = [
@@ -231,6 +257,246 @@ console.log(c.valor());
       '`cuenta` es local de `crearContador`: cuando la función termina, las tres arrow functions la siguen viendo, pero nadie más.',
       'Cada llamada a `crearContador` crea una `cuenta` nueva, por eso los contadores son independientes.',
       'Es la misma idea que usa React: un hook como `useState` recuerda valores entre renders gracias a closures.'
+    ]
+  },
+  {
+    id: 'sleep',
+    t: 'Tu primera promesa: esperar(ms)',
+    d: 'Escribí `esperar(ms)` que devuelva una promesa que se resuelva después de `ms` milisegundos. Es el `sleep` que JavaScript no trae.',
+    start: `// const esperar = ...
+
+console.log('antes');
+await esperar(500);
+console.log('medio segundo después');
+`,
+    exports: ['esperar'],
+    async tests(ex, t) {
+      await t.ok('Devuelve una promesa', () => ex.esperar(1) instanceof Promise, 'Tiene que devolver new Promise(...).');
+      await t.ok('Tarda al menos lo que le pedís (100 ms)', async () => {
+        const t0 = performance.now();
+        await ex.esperar(100);
+        return performance.now() - t0 >= 95;
+      }, 'Se resolvió antes de tiempo.');
+      await t.ok('No tarda de más (menos de 300 ms para 100)', async () => {
+        const t0 = performance.now();
+        await ex.esperar(100);
+        return performance.now() - t0 < 300;
+      });
+    },
+    sol: `const esperar = (ms) => new Promise((resolve) => setTimeout(resolve, ms));`,
+    why: [
+      '`new Promise` recibe una función (el executor) con dos parámetros: `resolve` para cumplirla y `reject` para rechazarla.',
+      'Acá le paso `resolve` directo a `setTimeout`: cuando vence el timer, la promesa se cumple.',
+      'Es el patrón base para convertir cualquier API de callbacks en una promesa.',
+      'Una promesa tiene tres estados: pendiente, cumplida (fulfilled) o rechazada (rejected). Una vez que se asienta, no cambia más.'
+    ]
+  },
+  {
+    id: 'reject',
+    t: 'Rechazar una promesa',
+    d: '`dividir(a, b)` devuelve una promesa que se resuelve con `a / b`, o se rechaza con `new Error(\'No se puede dividir por cero\')` si `b` es 0.',
+    start: `// const dividir = ...
+
+dividir(10, 2).then((r) => console.log('resultado', r));
+dividir(1, 0).catch((e) => console.log('error:', e.message));
+`,
+    exports: ['dividir'],
+    async tests(ex, t) {
+      await t.ok('Devuelve una promesa', () => ex.dividir(1, 1) instanceof Promise);
+      await t.eq('`dividir(10, 2)` se resuelve con 5', () => ex.dividir(10, 2), 5);
+      await t.rejects('`dividir(1, 0)` se rechaza con el mensaje correcto', () => ex.dividir(1, 0), 'No se puede dividir por cero');
+    },
+    sol: `const dividir = (a, b) => new Promise((resolve, reject) => {
+  if (b === 0) {
+    reject(new Error('No se puede dividir por cero'));
+    return;
+  }
+  resolve(a / b);
+});
+
+// Equivalente con async: throw adentro de una async = promesa rechazada
+// const dividir = async (a, b) => {
+//   if (b === 0) throw new Error('No se puede dividir por cero');
+//   return a / b;
+// };`,
+    why: [
+      'Rechazo con un `Error` y no con un string: así el que lo reciba tiene `message` y el stack trace.',
+      'El `return` después del `reject` evita seguir ejecutando: `reject` no corta la función por sí solo.',
+      'En una función `async`, `throw` rechaza la promesa que devuelve y `return` la resuelve. Son las dos formas equivalentes.'
+    ]
+  },
+  {
+    id: 'promisify',
+    t: 'De callback a promesa',
+    d: '`leerArchivo(nombre, callback)` ya existe y usa el estilo de Node: `callback(error, datos)`. Escribí `leerArchivoP(nombre)` que haga lo mismo pero devuelva una promesa.',
+    start: `// leerArchivo(nombre, (err, datos) => ...) ya está definida.
+leerArchivo('notas.txt', (err, datos) => {
+  if (err) console.log('error', err.message);
+  else console.log('callback:', datos);
+});
+
+// const leerArchivoP = ...
+`,
+    exports: ['leerArchivoP'],
+    async tests(ex, t) {
+      await t.eq("`leerArchivoP('notas.txt')` se resuelve con el contenido", () => ex.leerArchivoP('notas.txt'), 'Lunes 28/09 15:20, Catamarca 3265');
+      await t.rejects("`leerArchivoP('no-existe.txt')` se rechaza con el error", () => ex.leerArchivoP('no-existe.txt'), 'ENOENT');
+    },
+    sol: `const leerArchivoP = (nombre) => new Promise((resolve, reject) => {
+  leerArchivo(nombre, (err, datos) => {
+    if (err) reject(err);
+    else resolve(datos);
+  });
+});`,
+    why: [
+      'En Node, los callbacks reciben primero el error y después el resultado ("error-first callback").',
+      'Envuelvo la llamada en `new Promise`: si llega error, `reject`; si no, `resolve` con los datos.',
+      'Node trae esto hecho: `util.promisify(fs.readFile)`, o directamente `fs/promises`.',
+      'Las promesas resuelven el "callback hell": en vez de anidar, se encadena o se usa `await`.'
+    ]
+  },
+  {
+    id: 'await',
+    t: 'De .then a async/await',
+    d: 'Reescribí `nombreEnMayus` con `async`/`await`, sin ningún `.then`. `api.getUser(id)` devuelve una promesa con `{ id, name, email }`.',
+    start: `// Reescribila con async/await (sin .then)
+function nombreEnMayus(id) {
+  return api.getUser(id)
+    .then((usuario) => usuario.name)
+    .then((nombre) => nombre.toUpperCase());
+}
+
+console.log(await nombreEnMayus(1));
+`,
+    exports: ['nombreEnMayus'],
+    async tests(ex, t) {
+      await t.ok('Devuelve una promesa', () => ex.nombreEnMayus(1) instanceof Promise);
+      await t.eq('`nombreEnMayus(1)`', () => ex.nombreEnMayus(1), 'LEANNE GRAHAM');
+      await t.eq('`nombreEnMayus(3)`', () => ex.nombreEnMayus(3), 'CLEMENTINE BAUCH');
+      t.src('Usás `await`', /\bawait\s+api\.getUser/);
+      t.src('Sin `.then`', /\.then\(/, false);
+    },
+    sol: `async function nombreEnMayus(id) {
+  const usuario = await api.getUser(id);
+  return usuario.name.toUpperCase();
+}`,
+    why: [
+      '`async` hace que la función siempre devuelva una promesa: lo que retornes pasa a ser el valor con el que se resuelve.',
+      '`await` pausa la función hasta que la promesa se asiente y te da el valor. Pausa esta función, no el programa: el event loop sigue atendiendo otras cosas.',
+      'Es azúcar sintáctica sobre promesas: por debajo es lo mismo que la cadena de `.then`, pero se lee de arriba abajo como código sincrónico.'
+    ]
+  },
+  {
+    id: 'trycatch',
+    t: 'Errores con try/catch',
+    d: '`usuarioONull(id)` devuelve el usuario, o `null` si la API falla (por ejemplo con id 404). Manejá el error con `try`/`catch` y logueálo con `console.error`.',
+    start: `// async function usuarioONull(id) { ... }
+
+console.log(await usuarioONull(2));
+console.log(await usuarioONull(404));
+`,
+    exports: ['usuarioONull'],
+    async tests(ex, t) {
+      await t.eq('`usuarioONull(2)` devuelve el usuario', () => ex.usuarioONull(2), { id: 2, name: 'Ervin Howell', email: 'Shanna@melissa.tv' });
+      await t.eq('`usuarioONull(404)` devuelve null', () => ex.usuarioONull(404), null);
+      t.src('Usás `try` y `catch`', /\btry\b[\s\S]*\bcatch\b/);
+    },
+    sol: `async function usuarioONull(id) {
+  try {
+    return await api.getUser(id);
+  } catch (error) {
+    console.error('Falló la API:', error.message);
+    return null;
+  }
+}`,
+    why: [
+      'Con `await`, una promesa rechazada se convierte en un `throw` en esa línea, así que la atrapa un `try/catch` común.',
+      'Ojo con `return api.getUser(id)` sin `await` adentro del `try`: la promesa se devuelve antes de rechazarse y el `catch` nunca se entera. Por eso va `return await`.',
+      'Decidir qué hacer con el error es parte del diseño: acá devuelvo `null`; en una UI mostraría un mensaje y en una API respondería un 4xx o 5xx.'
+    ]
+  },
+  {
+    id: 'all',
+    t: 'En paralelo con Promise.all',
+    d: '`nombres(ids)` trae todos los usuarios EN PARALELO (no uno por uno) y devuelve un array con sus nombres, en el mismo orden que los ids.',
+    start: `// async function nombres(ids) { ... }
+
+console.log(await nombres([1, 2, 3]));
+`,
+    exports: ['nombres'],
+    async tests(ex, t, m) {
+      m.api.stats.max = 0;
+      await t.eq('`nombres([1, 2, 3])`', () => ex.nombres([1, 2, 3]), ['Leanne Graham', 'Ervin Howell', 'Clementine Bauch']);
+      await t.ok('Los 3 pedidos salieron a la vez', () => m.api.stats.max >= 3,
+        'Hubo como máximo ' + m.api.stats.max + ' pedido(s) en vuelo: los estás haciendo uno por uno (await dentro de un for).');
+      await t.eq('`nombres([3, 1])` respeta el orden', () => ex.nombres([3, 1]), ['Clementine Bauch', 'Leanne Graham']);
+      await t.eq('`nombres([])` devuelve []', () => ex.nombres([]), []);
+    },
+    sol: `async function nombres(ids) {
+  const usuarios = await Promise.all(ids.map((id) => api.getUser(id)));
+  return usuarios.map((u) => u.name);
+}`,
+    why: [
+      '`ids.map(...)` lanza todos los pedidos juntos y devuelve un array de promesas; `Promise.all` espera a que se cumplan todas.',
+      'Tarda lo que el pedido más lento, no la suma. Con `await` dentro de un `for...of` serían secuenciales: útil solo si uno depende del anterior.',
+      'Si una falla, `Promise.all` rechaza entero. Si querés todos los resultados igual, `Promise.allSettled`; si alcanza con el primero que responda bien, `Promise.any`.'
+    ]
+  },
+  {
+    id: 'fetch',
+    t: 'fetch y el manejo de res.ok',
+    d: '`cargarPosts(userId)` pide `https://jsonplaceholder.typicode.com/posts?userId=...` con `fetch` y devuelve solo los títulos. Si la respuesta no es exitosa, tirá `new Error(\'HTTP \' + res.status)`. (Acá `fetch` es un mock: con `userId` 0 responde 500).',
+    start: `// async function cargarPosts(userId) { ... }
+
+console.log(await cargarPosts(1));
+`,
+    exports: ['cargarPosts'],
+    async tests(ex, t, m) {
+      await t.eq('`cargarPosts(1)` devuelve los títulos', () => ex.cargarPosts(1), ['sunt aut facere repellat provident', 'qui est esse', 'ea molestias quasi exercitationem']);
+      await t.ok('Pidió la URL correcta', () => m.fetch.pedidos.some((u) => u.includes('jsonplaceholder.typicode.com/posts?userId=1')),
+        'No encontré un fetch a /posts?userId=1. Pedidos: ' + m.fetch.pedidos.join(', '));
+      await t.rejects('Con un 500 rechaza con `HTTP 500`', () => ex.cargarPosts(0), 'HTTP 500');
+    },
+    sol: `async function cargarPosts(userId) {
+  const res = await fetch(\`https://jsonplaceholder.typicode.com/posts?userId=\${userId}\`);
+  if (!res.ok) throw new Error('HTTP ' + res.status);
+  const posts = await res.json();
+  return posts.map((p) => p.title);
+}`,
+    why: [
+      '`fetch` solo rechaza si falla la red (sin conexión, DNS, CORS). Un 404 o un 500 llegan como respuesta "exitosa", por eso hay que mirar `res.ok` (status 200 a 299).',
+      '`res.json()` también devuelve una promesa: el body llega de a partes y hay que esperarlo.',
+      'Es exactamente lo que va dentro de un `useEffect` en React, con estados de loading y error alrededor.'
+    ]
+  },
+  {
+    id: 'race',
+    t: 'Timeout con Promise.race',
+    d: '`conTimeout(promesa, ms)` devuelve una promesa que se resuelve con el valor de `promesa` si llega antes de `ms`, o se rechaza con `new Error(\'Timeout\')` si no.',
+    start: `// const conTimeout = ...
+
+const lenta = new Promise((r) => setTimeout(() => r('llegó'), 1000));
+conTimeout(lenta, 200)
+  .then(console.log)
+  .catch((e) => console.log('error:', e.message));
+`,
+    exports: ['conTimeout'],
+    async tests(ex, t) {
+      const despues = (ms, v) => new Promise((r) => setTimeout(() => r(v), ms));
+      await t.eq('Si la promesa llega a tiempo, devuelve su valor', () => ex.conTimeout(despues(20, 'ok'), 200), 'ok');
+      await t.rejects('Si tarda de más, rechaza con `Timeout`', () => ex.conTimeout(despues(400, 'tarde'), 50), 'Timeout');
+      await t.rejects('Si la promesa falla antes, propaga ese error', () => ex.conTimeout(Promise.reject(new Error('falló la API')), 200), 'falló la API');
+    },
+    sol: `const conTimeout = (promesa, ms) => {
+  const timeout = new Promise((_, reject) =>
+    setTimeout(() => reject(new Error('Timeout')), ms)
+  );
+  return Promise.race([promesa, timeout]);
+};`,
+    why: [
+      '`Promise.race` se asienta igual que la primera promesa que se asiente, se resuelva o se rechace.',
+      'Armo una promesa que solo sabe rechazar después de `ms` y la hago competir con la original.',
+      'La promesa perdedora no se cancela: sigue corriendo, simplemente se ignora su resultado. Para cortar de verdad un `fetch` se usa `AbortController`.'
     ]
   }
 ];
