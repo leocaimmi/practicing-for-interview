@@ -58,7 +58,22 @@
         <button type="button" role="tab" data-tab="pre" aria-selected="false">Preguntas</button>
       </div>
       <div id="tab-mis"><ol class="mis" id="missions"></ol><div id="fin"></div></div>
-      <div id="tab-chu" class="cheat" hidden><!-- chuleta --></div>
+      <div id="tab-chu" class="cheat" hidden>
+        <h3>Rutas</h3>
+        <dl><dt>/</dt><dd>Raíz del sistema</dd><dt>~</dt><dd>Tu home (/home/leo)</dd><dt>.</dt><dd>Carpeta actual</dd><dt>..</dt><dd>Carpeta padre</dd><dt>/etc/x</dt><dd>Absoluta: arranca en /</dd><dt>docs/x</dt><dd>Relativa: arranca donde estás</dd></dl>
+        <h3>Navegar</h3>
+        <dl><dt>pwd</dt><dd>Dónde estoy</dd><dt>ls -la</dt><dd>Listar todo, con ocultos y permisos</dd><dt>cd dir</dt><dd>Entrar a una carpeta</dd><dt>cd ..</dt><dd>Subir un nivel</dd><dt>cd ~ / cd</dt><dd>Ir al home</dd><dt>cd -</dt><dd>Volver a la carpeta anterior</dd><dt>tree</dt><dd>Ver el árbol de carpetas</dd></dl>
+        <h3>Archivos</h3>
+        <dl><dt>mkdir -p a/b</dt><dd>Crear carpetas (con padres)</dd><dt>touch f</dt><dd>Crear archivo vacío</dd><dt>cp a b</dt><dd>Copiar (<code>-r</code> para carpetas)</dd><dt>mv a b</dt><dd>Mover o renombrar</dd><dt>rm f</dt><dd>Borrar archivo</dd><dt>rm -r dir</dt><dd>Borrar carpeta y contenido</dd><dt>rmdir dir</dt><dd>Borrar carpeta vacía</dd></dl>
+        <h3>Abrir, leer y buscar</h3>
+        <dl><dt>cat f</dt><dd>Mostrar el contenido</dd><dt>less f</dt><dd>Leer paginado (q sale)</dd><dt>nano f</dt><dd>Editar (^S guarda, ^X cierra)</dd><dt>head / tail -n 5</dt><dd>Primeras / últimas líneas</dd><dt>tail -f log</dt><dd>Seguir un log en vivo</dd><dt>grep -rn "x" dir</dt><dd>Buscar texto recursivo con nro de línea</dd><dt>find . -name "*.js"</dt><dd>Buscar archivos por nombre</dd><dt>wc -l f</dt><dd>Contar líneas</dd></dl>
+        <h3>Redirección y encadenado</h3>
+        <dl><dt>cmd &gt; f</dt><dd>Salida a archivo (pisa)</dd><dt>cmd &gt;&gt; f</dt><dd>Salida a archivo (agrega)</dd><dt>a | b</dt><dd>Pipe: la salida de a entra a b</dd><dt>a &amp;&amp; b</dt><dd>Corre b solo si a anduvo</dd><dt>2&gt;&amp;1</dt><dd>Mezclar errores con la salida (teoría)</dd></dl>
+        <h3>Permisos</h3>
+        <dl><dt>-rwxr-xr-x</dt><dd>tipo · dueño · grupo · otros</dd><dt>chmod +x f</dt><dd>Hacer ejecutable</dd><dt>chmod 755 f</dt><dd>r=4 w=2 x=1 → 7=rwx 5=r-x</dd><dt>chmod 644 f</dt><dd>rw-r--r--, típico de archivo</dd><dt>sudo cmd</dt><dd>Ejecutar como root</dd></dl>
+        <h3>Procesos y sistema</h3>
+        <dl><dt>ps aux</dt><dd>Todos los procesos</dd><dt>kill PID</dt><dd>Pedir que termine (SIGTERM)</dd><dt>kill -9 PID</dt><dd>Forzar (SIGKILL)</dd><dt>top / htop</dt><dd>Monitor en vivo</dd><dt>sudo apt update</dt><dd>Actualizar lista de paquetes</dd><dt>sudo apt install x</dt><dd>Instalar un paquete</dd><dt>man cmd</dt><dd>Manual (acá, en castellano)</dd></dl>
+      </div>
       <div id="tab-pre" class="qa" hidden><!-- preguntas --></div>
     </aside>
   </main>
@@ -73,7 +88,6 @@
 <script src="js/commands/files.js" defer></script>
 <script src="js/commands/text.js" defer></script>
 <script src="js/commands/system.js" defer></script>
-<!-- comandos -->
 <script src="js/commands/help.js" defer></script>
 <script src="js/nano.js" defer></script>
 <script src="js/missions.js" defer></script>
