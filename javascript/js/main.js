@@ -7,6 +7,10 @@ function renderStats() {
     const kataDone = KATAS.filter((k) => S.kataDone[k.id]).length;
     $('#st-kata').textContent = kataDone + '/' + KATAS.length;
   }
+  if (typeof QUESTIONS !== 'undefined') {
+    const known = QUESTIONS.filter((q) => S.qKnown[q.t]).length;
+    $('#st-q').textContent = known + '/' + QUESTIONS.length;
+  }
 }
 
 /* En desktop, los paneles ocupan justo el alto que queda en la ventana: scrollean ellos, no la página */
@@ -41,5 +45,6 @@ openLoop(Math.min(S.loop, LOOP.length - 1));
 if (typeof openKata === 'function') openKata(Math.min(S.kata, KATAS.length - 1));
 if (typeof initPlayground === 'function') initPlayground();
 if (typeof openGuide === 'function') openGuide(Math.min(S.guide, GUIDE.length - 1));
+if (typeof openQuestion === 'function') openQuestion(Math.min(S.question, QUESTIONS.length - 1));
 showTab(S.tab);
 if (document.fonts) document.fonts.ready.then(fitPanes); /* las fuentes cambian el alto del header */

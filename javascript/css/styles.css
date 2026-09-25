@@ -116,7 +116,7 @@ button:focus-visible, textarea:focus-visible, a:focus-visible, summary:focus-vis
 .desc p { margin: 0 0 8px; }
 .desc ul { margin: 0 0 8px; padding-left: 20px; }
 code { font-family: var(--mono); color: var(--neon); }
-.desc code, .q code, .why code, .tip code, .qa code, .notes code { background: var(--panel2); padding: 0 4px; border-radius: 4px; font-size: .95em; }
+.desc code, .q code, .why code, .tip code, .notes code { background: var(--panel2); padding: 0 4px; border-radius: 4px; font-size: .95em; }
 .row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
 .row .push { margin-left: auto; }
 
@@ -188,14 +188,8 @@ ul.notes li { margin-bottom: 6px; }
 ul.notes li::marker { color: var(--neon); }
 
 /* ---------- preguntas ---------- */
-.qa { max-width: 860px; }
-.qa h3 { margin: 22px 0 6px; font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--neon); font-weight: 500; }
-.qa h3:first-child { margin-top: 0; }
-.qa details { padding: 10px 0; border-bottom: 1px solid var(--line); }
-.qa summary { cursor: pointer; font-weight: 500; }
-.qa summary::marker { color: var(--neon); }
-.qa details p { margin: 8px 0 4px; color: var(--muted); font-size: 14px; }
-.qa pre.code { margin-top: 8px; font-size: 14px; }
+.say { padding: 12px 14px; background: var(--neon-dim); border: 1px solid var(--neon); border-radius: 8px; font-size: 16px; }
+.say code { background: #000; padding: 0 4px; border-radius: 4px; }
 
 footer { margin-top: 24px; color: var(--faint); font-size: 13px; }
 footer kbd { font-family: var(--mono); background: var(--panel2); border: 1px solid var(--line); border-radius: 4px; padding: 0 5px; color: var(--text); }

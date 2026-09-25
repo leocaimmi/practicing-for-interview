@@ -24,6 +24,7 @@
     <div class="stats">
       <div><strong id="st-loop">0/0</strong><span>event loop</span></div>
       <div><strong id="st-kata">0/0</strong><span>katas</span></div>
+      <div><strong id="st-q">0/0</strong><span>preguntas</span></div>
     </div>
   </header>
 
@@ -67,34 +68,11 @@
       </div>
     </section>
 
-    <section id="tab-pre" class="pane qa" aria-label="Preguntas" hidden>
-      <h3>Asincronía</h3>
-      <details><summary>¿Qué es una promesa?</summary><p>Un objeto que representa un valor que todavía no está: el resultado de una operación asincrónica. Tiene tres estados: pendiente, cumplida (<code>fulfilled</code>) o rechazada (<code>rejected</code>). Una vez que se asienta, no cambia más. Con <code>.then</code> recibo el valor, con <code>.catch</code> el error y <code>.finally</code> corre siempre.</p></details>
-      <details><summary>¿Por qué existen las promesas si ya había callbacks?</summary><p>Con callbacks, cada paso asincrónico anidaba otro nivel (el "callback hell") y el manejo de errores se repetía en cada uno. Las promesas se encadenan de forma plana, un solo <code>.catch</code> atrapa errores de toda la cadena, y se pueden combinar con <code>Promise.all</code>.</p></details>
-      <details><summary>¿Qué hacen async y await?</summary><p><code>async</code> hace que una función siempre devuelva una promesa. <code>await</code> pausa esa función hasta que la promesa se asienta y devuelve su valor; si se rechaza, tira el error en esa línea y lo atrapo con <code>try/catch</code>. Es azúcar sintáctica sobre promesas: se lee como código sincrónico.</p></details>
-      <details><summary>¿await bloquea el programa?</summary><p>No. Pausa solamente la función <code>async</code> donde está. El resto del programa sigue: el event loop atiende otros eventos, timers y respuestas mientras tanto. Por eso la interfaz no se congela.</p></details>
-      <details><summary>¿Qué es el event loop?</summary><p>JavaScript corre en un solo hilo con una pila de llamadas. Las operaciones asincrónicas (timers, red, eventos) las resuelve el entorno (navegador o Node) y, cuando terminan, encolan su callback. El event loop espera a que la pila esté vacía, vacía la cola de microtareas y después toma una macrotarea, en ciclo.</p></details>
-      <details><summary>¿Microtareas contra macrotareas?</summary><p>Microtareas: <code>.then</code>, <code>.catch</code>, <code>.finally</code>, lo que sigue a un <code>await</code> y <code>queueMicrotask</code>. Macrotareas: <code>setTimeout</code>, <code>setInterval</code>, eventos del DOM, I/O. Después de cada macrotarea se vacían todas las microtareas; por eso una promesa resuelta siempre sale antes que un <code>setTimeout(fn, 0)</code>.</p></details>
-      <details><summary>¿Promise.all, allSettled, race o any?</summary><p><code>all</code>: espera todas y falla con la primera que rechace. <code>allSettled</code>: espera todas y te da el estado de cada una, sin fallar. <code>race</code>: se queda con la primera que se asiente, bien o mal (sirve para timeouts). <code>any</code>: la primera que se cumpla; falla solo si fallan todas.</p></details>
-      <details><summary>¿Cómo hacés pedidos en paralelo y cuándo en serie?</summary><p>En paralelo: <code>await Promise.all(ids.map(id =&gt; api.get(id)))</code>, tarda lo que el más lento. En serie: <code>for...of</code> con <code>await</code> adentro, solo cuando un pedido depende del resultado del anterior. <code>forEach</code> con una función <code>async</code> no espera a nadie.</p></details>
-      <details><summary>¿Por qué fetch no falla con un 404 o un 500?</summary><p>Porque para <code>fetch</code> el pedido salió bien: hubo respuesta. Solo rechaza por errores de red (sin conexión, DNS, CORS). Hay que revisar <code>res.ok</code> (status 200 a 299) y tirar el error a mano: <code>if (!res.ok) throw new Error('HTTP ' + res.status)</code>.</p></details>
-
-      <h3>Lenguaje</h3>
-      <details><summary>¿var, let o const?</summary><p><code>const</code> por defecto, <code>let</code> si la variable se reasigna, <code>var</code> nunca. <code>var</code> tiene scope de función y se "eleva" (hoisting) con valor <code>undefined</code>. <code>let</code> y <code>const</code> tienen scope de bloque y, antes de su declaración, están en la "zona muerta temporal": usarlas tira <code>ReferenceError</code>.</p></details>
-      <details><summary>¿Arrow function contra function?</summary><p>La arrow es más corta, tiene return implícito y, sobre todo, no tiene <code>this</code> propio: usa el del lugar donde se escribió. Tampoco tiene <code>arguments</code> ni se puede usar con <code>new</code>. Para métodos de objeto que usan <code>this</code>, conviene la sintaxis de método o <code>function</code>.</p></details>
-      <details><summary>¿Qué es un closure?</summary><p>Una función que recuerda las variables del scope donde se creó, aunque ese scope ya haya terminado. Sirve para datos privados (un contador que nadie puede tocar desde afuera) y es la base de cómo los hooks de React recuerdan valores entre renders.</p>
-<pre data-hl>
-function crearContador() {
-  let cuenta = 0;
-  return () => ++cuenta;
-}
-</pre></details>
-      <details><summary>¿== contra ===?</summary><p><code>===</code> compara valor y tipo, sin conversiones. <code>==</code> convierte tipos antes de comparar (<code>'1' == 1</code> es <code>true</code>). Uso siempre <code>===</code>; la única excepción aceptada es <code>x == null</code> para cubrir <code>null</code> y <code>undefined</code> juntos.</p></details>
-      <details><summary>¿null contra undefined?</summary><p><code>undefined</code>: algo que no se asignó (variable sin valor, propiedad que no existe, función sin <code>return</code>). <code>null</code>: "vacío" puesto a propósito por el programador. <code>??</code> y <code>?.</code> tratan a los dos igual.</p></details>
-      <details><summary>¿map contra forEach?</summary><p><code>map</code> devuelve un array nuevo con cada elemento transformado. <code>forEach</code> no devuelve nada; es para efectos (loguear, guardar). Si no vas a usar el array resultante, <code>forEach</code>; si sí, <code>map</code>. En React se usa <code>map</code> para renderizar listas.</p></details>
-      <details><summary>¿Copia superficial contra copia profunda?</summary><p><code>{ ...obj }</code> y <code>[...arr]</code> copian solo el primer nivel: los objetos anidados siguen siendo compartidos. Para una copia profunda: <code>structuredClone(obj)</code>. Es clave en React: el estado no se muta, se reemplaza por una copia nueva.</p></details>
-      <details><summary>¿Qué es JSON y cómo se usa?</summary><p>Un formato de texto para intercambiar datos, basado en la sintaxis de objetos de JavaScript pero más estricto: claves con comillas dobles, sin funciones, sin <code>undefined</code>, sin comas finales. <code>JSON.stringify(obj)</code> pasa de objeto a texto y <code>JSON.parse(texto)</code> de texto a objeto.</p></details>
-      <details><summary>¿Qué trajo ES6 (ES2015)?</summary><p><code>let</code>/<code>const</code>, arrow functions, template literals, destructuring, parámetros por defecto, rest/spread, clases, módulos (<code>import</code>/<code>export</code>), promesas, <code>Map</code>/<code>Set</code>. Después llegaron <code>async/await</code> (ES2017), <code>?.</code> y <code>??</code> (ES2020).</p></details>
+    <section id="tab-pre" class="pane" aria-label="Preguntas" hidden>
+      <div class="lay">
+        <ol class="list" id="q-list" aria-label="Preguntas de entrevista"></ol>
+        <article class="card" id="q-main" aria-live="polite"></article>
+      </div>
     </section>
   </main>
 
@@ -109,6 +87,7 @@ function crearContador() {
 <script src="js/katas.js" defer></script>
 <script src="js/play.js" defer></script>
 <script src="js/guide.js" defer></script>
+<script src="js/questions.js" defer></script>
 <script src="js/main.js" defer></script>
 </body>
 </html>

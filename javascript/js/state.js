@@ -14,7 +14,9 @@ function freshState() {
     drafts: {},       // id de kata → código escrito
     play: null,       // código del playground (null = ejemplo por defecto)
     guide: 0,         // tema abierto de la guía rápida
-    guideSeen: {}     // índice → true (temas ya leídos)
+    guideSeen: {},    // índice → true (temas ya leídos)
+    question: 0,      // pregunta abierta
+    qKnown: {}        // texto de la pregunta → true (marcada como "La sé")
   };
 }
 
