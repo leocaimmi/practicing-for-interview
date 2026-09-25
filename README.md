@@ -10,7 +10,7 @@ Tomé la lista de requisitos, marqué lo que tenía flojo y armé algo para prac
 | Módulo | Estado | Qué practica |
 |---|---|---|
 | [Linux · Dojo de terminal](linux/) | ✅ listo | Navegación, archivos, pipes, redirecciones, permisos, procesos, apt, nano |
-| JavaScript ES6+ | en cola | Promesas, async/await, arrow functions, event loop |
+| [JavaScript ES6+ · Dojo de JavaScript](javascript/) | ✅ listo | Event loop, promesas, async/await, arrow functions, fetch |
 | React | en cola | Props, estado, hooks |
 | SQL | en cola | JOINs, claves foráneas, agregaciones |
 | APIs REST y JSON | en cola | Verbos HTTP, códigos de estado, idempotencia |
@@ -51,6 +51,33 @@ linux/
 ```
 
 HTML, CSS y JavaScript sin frameworks ni build: se abre `index.html` y anda.
+
+## Dojo de JavaScript
+
+La oferta aclara que usan IA pero esperan que puedas **comprender, justificar y defender** el código. Por eso este módulo es para escribir a mano y explicar:
+
+- **12 ejercicios de event loop** del tipo "¿en qué orden se imprime?". El código se ejecuta de verdad en el navegador, así que la respuesta correcta es la salida real y no una escrita a mano. Cada uno trae el porqué paso a paso.
+- **14 katas con tests** que corren en el navegador: arrow functions, destructuring y spread, `map`/`filter`/`reduce`, closures, `new Promise`, reject, promisify, `.then` → `async/await`, `try/catch`, `Promise.all`, `fetch` con `res.ok` y timeout con `Promise.race`. Los tests detectan los errores típicos: pedidos en serie en vez de paralelo, `return` sin `await` dentro del `try`, `fetch` sin revisar `res.ok`.
+- Cada kata tiene una solución de referencia y **"Cómo lo defendés"**: lo que hay que poder decir en voz alta.
+- **Playground** con `fetch` real contra jsonplaceholder y `await` en el nivel superior.
+- **Guía rápida** de sintaxis y **preguntas de entrevista**.
+
+### Estructura
+
+```
+javascript/
+├── index.html            # pestañas, guía rápida y preguntas
+├── css/styles.css
+└── js/
+    ├── state.js          # progreso y borradores en localStorage
+    ├── highlight.js      # resaltado de sintaxis
+    ├── runner.js         # ejecuta código, captura console.* y espera timers/promesas
+    ├── editor.js         # textarea con Tab, sangría automática y Ctrl+Enter
+    ├── loop.js           # ejercicios de event loop
+    ├── katas.js          # katas, mocks (api, leerArchivo, fetch) y tester
+    ├── play.js           # playground
+    └── main.js           # arranque
+```
 
 ## Correr local
 
