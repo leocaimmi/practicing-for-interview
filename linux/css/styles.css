@@ -116,9 +116,14 @@ button:focus-visible, input:focus-visible, textarea:focus-visible, a:focus-visib
 .vt button[aria-selected="true"] { color: var(--neon); background: var(--neon-dim); }
 
 /* ---------- vista árbol ---------- */
-.tree { height: var(--screen-h); overflow: auto; padding: 12px 14px 18px; font-family: var(--mono); font-size: 15px; line-height: 1.5; scrollbar-color: var(--line) transparent; }
+/* Vista dividida: el árbol arriba y la consola abajo comparten el alto de la terminal */
+.term-body.split .tree { height: calc(var(--screen-h) * .5); border-bottom: 1px solid var(--line); }
+.term-body.split .screen { height: calc(var(--screen-h) * .5); }
+.tl.moved { animation: moved 1s ease-out; }
+@keyframes moved { from { background: var(--neon); color: #000; } to { background: var(--neon-dim); } }
+.tree { position: relative; overflow: auto; padding: 10px 14px 14px; font-family: var(--mono); font-size: 15px; line-height: 1.5; scrollbar-color: var(--line) transparent; }
 .tree[hidden], .screen[hidden] { display: none; }
-.t-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; gap: 10px; padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px dashed var(--line); }
+.t-head { position: sticky; top: -10px; z-index: 1; background: var(--term); padding-top: 10px; margin-top: -10px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; gap: 10px; padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px dashed var(--line); }
 .t-where b { color: var(--cyan); }
 .t-where span { display: block; color: var(--faint); font-size: 13px; }
 .t-opts { display: flex; flex-wrap: wrap; gap: 6px; }
@@ -238,9 +243,8 @@ footer kbd { font-family: var(--mono); background: var(--panel2); border: 1px so
 }
 @media (hover: none) {
   .keys { display: flex; }
-  .keys.off { display: none; }
 }
 @media (prefers-reduced-motion: reduce) {
-  h1 .cur { animation: none; }
+  h1 .cur, .tl.moved { animation: none; }
   .meter i, button { transition: none; }
 }
