@@ -3,3 +3,6 @@ Thumbs.db
 .vscode/
 node_modules/
 *.log
+
+# contexto personal para Claude Code (no subir)
+CONTEXTO-ENTREVISTA.md
