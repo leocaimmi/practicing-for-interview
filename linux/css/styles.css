@@ -183,6 +183,9 @@ footer kbd { font-family: var(--mono); background: var(--panel2); border: 1px so
   .tabs button { flex: 1; padding-inline: 4px; }
 }
 /* teclas rápidas en pantallas táctiles */
+@media (max-width: 420px) {
+  .screen { font-size: 13.5px; }
+}
 @media (hover: none) {
   .keys { display: flex; }
 }
