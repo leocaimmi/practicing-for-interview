@@ -6,7 +6,7 @@ Repo de práctica para una entrevista full-stack. Cada módulo es una herramient
 - HTML, CSS y JavaScript vanilla. **Sin frameworks, sin build, sin npm.** Tiene que andar abriendo `index.html`.
 - Única excepción: el Dojo de React carga React 18 y Babel standalone desde jsDelivr para compilar y montar el JSX del usuario. El sitio en sí sigue sin build.
 - Lo compartido entre dojos vive en `assets/` (`dojo.css` y `assets/js/`): `dom → state del módulo → highlight → runner → editor → tester → módulo`.
-- Los módulos usan `<script defer>` clásicos (no ES modules) que comparten el scope global. El orden de los scripts en el HTML importa: `state → fs → parser → shell → commands/* → nano → missions → main`.
+- Los módulos usan `<script defer>` clásicos (no ES modules) que comparten el scope global. El orden de los scripts en el HTML importa: `state → fs → parser → shell → commands/* → nano → missions → tree → main`.
 - Los comandos del simulador se registran en `C.nombre = (args, io) => ({ out, err, code, html })`. `io.tty` indica si la salida va a pantalla (colores) o a un pipe/archivo (texto plano).
 - Los mensajes de error imitan a Ubuntu en inglés; la interfaz y las explicaciones van en castellano rioplatense.
 - El estado se guarda en `localStorage` con try/catch: la página tiene que andar aunque el storage esté bloqueado.
