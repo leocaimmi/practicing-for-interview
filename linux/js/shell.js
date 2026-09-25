@@ -113,11 +113,11 @@ function afterRun() {
 const outEl = $('#out'), screenEl = $('#screen'), inputEl = $('#cmd');
 
 function ps1() {
-  return '<span class="c-user">leo@dessa</span>:<span class="c-path">' + esc(tildify(S.cwd)) + '</span>$ ';
+  return '<span class="c-user">leo@ubuntu</span>:<span class="c-path">' + esc(tildify(S.cwd)) + '</span>$ ';
 }
 function updatePrompt() {
   $('#ps1').innerHTML = ps1();
-  $('#bartitle').textContent = 'leo@dessa: ' + tildify(S.cwd);
+  $('#bartitle').textContent = 'leo@ubuntu: ' + tildify(S.cwd);
 }
 function addLine(cls, html) {
   const d = document.createElement('div');
