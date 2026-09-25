@@ -3,8 +3,6 @@
 Herramientas propias para repasar los requisitos de una búsqueda de **programador full-stack**.
 Tomé la lista de requisitos, marqué lo que tenía flojo y armé algo para practicarlo en vez de solo leer teoría.
 
-**Demo:** https://leocaimmi.github.io/practicing-for-interview/
-
 ## Módulos
 
 | Módulo | Estado | Qué practica |
@@ -104,5 +102,5 @@ python3 -m http.server 8000   # o simplemente abrir index.html
 
 ## Deploy
 
-Cada push a `main` publica el sitio en GitHub Pages con el workflow de `.github/workflows/pages.yml`
-(en *Settings → Pages → Source* elegir **GitHub Actions**).
+Es un sitio estático, sin build: se despliega en Vercel importando el repo, sin configuración extra
+(Framework Preset: **Other**, sin comando de build y con la raíz del repo como directorio de salida).
