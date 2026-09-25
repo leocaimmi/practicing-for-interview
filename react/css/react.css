@@ -28,6 +28,7 @@
 .pv-label button { padding: 4px 10px; }
 
 /* ---------- predicciones ---------- */
+.ask { margin-top: 14px; }
 .opts { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
 .opts button { text-align: left; font-size: 15px; padding: 10px 12px; }
 .opts button b { font-family: var(--mono); color: var(--neon); margin-right: 8px; }
