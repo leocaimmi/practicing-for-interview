@@ -25,7 +25,7 @@ Nunca había usado Linux, así que en lugar de levantar una VM armé un simulado
 - **Parser de bash** propio: comillas, variables (`$HOME`, `$?`), pipes `|`, redirecciones `>` `>>` `<`, operadores `&&` `||` `;` y comodines `*` `?`.
 - **Más de 40 comandos**: `ls -la`, `cd -`, `cp -r`, `mv`, `rm -r`, `grep -rn`, `find -name`, `chmod 755`, `ps aux`, `kill`, `sudo apt install`, `nano`, `curl` y más, con los mismos mensajes de error que Ubuntu.
 - **Realismo donde enseña algo**: `./deploy.sh` falla con `Permission denied` hasta hacer `chmod +x`; `apt` sin `sudo` falla por el lock; matar un proceso de `root` tira `Operation not permitted`.
-- **20 misiones guiadas** con pista y explicación, más una chuleta y preguntas típicas de entrevista.
+- **20 misiones guiadas** con pista y explicación, más una guía rápida de comandos y preguntas típicas de entrevista.
 - `curl` simulado contra `jsonplaceholder.typicode.com` para practicar REST (`-X`, `-d`, `-i`).
 - Autocompletado con Tab, historial con ↑↓, teclas rápidas en celular y progreso guardado en `localStorage`.
 

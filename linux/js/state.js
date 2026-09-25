@@ -31,9 +31,9 @@ const SPEC = {
     },
     basura: { 'viejo.log': "[2025-01-10] error: timeout\n[2025-01-11] error: timeout\n", 'temp.txt': "" }
   } },
-  etc: { hostname: "dessa\n", 'os-release': 'PRETTY_NAME="Ubuntu 24.04.1 LTS"\nNAME="Ubuntu"\nVERSION_ID="24.04"\n', hosts: "127.0.0.1 localhost\n127.0.1.1 dessa\n" },
+  etc: { hostname: "ubuntu\n", 'os-release': 'PRETTY_NAME="Ubuntu 24.04.1 LTS"\nNAME="Ubuntu"\nVERSION_ID="24.04"\n', hosts: "127.0.0.1 localhost\n127.0.1.1 ubuntu\n" },
   tmp: {},
-  var: { log: { syslog: "Sep 25 09:48:01 dessa systemd[1]: Started cron.service.\nSep 25 09:48:05 dessa sshd[412]: Server listening on 0.0.0.0 port 22.\nSep 25 10:02:17 dessa node[2048]: API escuchando en :3000\nSep 25 10:05:44 dessa node[2048]: error: ECONNREFUSED 127.0.0.1:5432\n" } },
+  var: { log: { syslog: "Sep 25 09:48:01 ubuntu systemd[1]: Started cron.service.\nSep 25 09:48:05 ubuntu sshd[412]: Server listening on 0.0.0.0 port 22.\nSep 25 10:02:17 ubuntu node[2048]: API escuchando en :3000\nSep 25 10:05:44 ubuntu node[2048]: error: ECONNREFUSED 127.0.0.1:5432\n" } },
   usr: { bin: {}, local: {} }
 };
 

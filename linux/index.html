@@ -19,7 +19,7 @@
       <a class="back" href="../">← practicing-for-interview</a>
       <p class="eyebrow">Repaso para la entrevista · Linux</p>
       <h1>Dojo de terminal<span class="cur" aria-hidden="true"></span></h1>
-      <p class="lede">Un Ubuntu de juguete que corre en tu navegador. Seguí las misiones o escribí lo que quieras: si rompés algo, reiniciás y listo.</p>
+      <p class="lede">Un Ubuntu de juguete que corre en tu navegador. Seguí las misiones o escribí lo que quieras: si algo se rompe, podés reiniciar el sistema cuando quieras.</p>
     </div>
     <button id="reset" class="btn-danger" type="button">Reiniciar sistema</button>
   </header>
@@ -28,7 +28,7 @@
     <section class="term" aria-label="Terminal simulada">
       <div class="bar">
         <span class="dots" aria-hidden="true"><i></i><i></i></span>
-        <span class="bar-title" id="bartitle">leo@dessa: ~</span>
+        <span class="bar-title" id="bartitle">leo@ubuntu: ~</span>
         <span class="dots" aria-hidden="true"><i></i><i class="x"></i></span>
       </div>
       <div class="term-body">
@@ -54,7 +54,7 @@
       <div class="meter"><i id="meter"></i></div>
       <div class="tabs" role="tablist">
         <button type="button" role="tab" data-tab="mis" aria-selected="true">Misiones</button>
-        <button type="button" role="tab" data-tab="chu" aria-selected="false">Chuleta</button>
+        <button type="button" role="tab" data-tab="chu" aria-selected="false">Guía rápida</button>
         <button type="button" role="tab" data-tab="pre" aria-selected="false">Preguntas</button>
       </div>
       <div id="tab-mis"><ol class="mis" id="missions"></ol><div id="fin"></div></div>
@@ -72,7 +72,7 @@
         <h3>Permisos</h3>
         <dl><dt>-rwxr-xr-x</dt><dd>tipo · dueño · grupo · otros</dd><dt>chmod +x f</dt><dd>Hacer ejecutable</dd><dt>chmod 755 f</dt><dd>r=4 w=2 x=1 → 7=rwx 5=r-x</dd><dt>chmod 644 f</dt><dd>rw-r--r--, típico de archivo</dd><dt>sudo cmd</dt><dd>Ejecutar como root</dd></dl>
         <h3>Procesos y sistema</h3>
-        <dl><dt>ps aux</dt><dd>Todos los procesos</dd><dt>kill PID</dt><dd>Pedir que termine (SIGTERM)</dd><dt>kill -9 PID</dt><dd>Forzar (SIGKILL)</dd><dt>top / htop</dt><dd>Monitor en vivo</dd><dt>sudo apt update</dt><dd>Actualizar lista de paquetes</dd><dt>sudo apt install x</dt><dd>Instalar un paquete</dd><dt>man cmd</dt><dd>Manual (acá, en castellano)</dd></dl>
+        <dl><dt>ps aux</dt><dd>Todos los procesos</dd><dt>kill PID</dt><dd>Pedir que termine (SIGTERM)</dd><dt>kill -9 PID</dt><dd>Forzar (SIGKILL)</dd><dt>top / htop</dt><dd>Monitor en vivo</dd><dt>sudo apt update</dt><dd>Actualizar lista de paquetes</dd><dt>sudo apt install x</dt><dd>Instalar un paquete</dd><dt>man cmd</dt><dd>Manual (acá, en castellano)</dd><dt>clear</dt><dd>Limpiar la pantalla (Ctrl+L). En Windows es cls</dd></dl>
       </div>
       <div id="tab-pre" class="qa" hidden>
         <h3>Lo que te pueden preguntar</h3>

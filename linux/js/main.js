@@ -12,7 +12,7 @@ function motd(wasRestored) {
   if (wasRestored) info('(Sesión restaurada: tus archivos siguen donde los dejaste.)');
 }
 
-/* Pestañas Misiones / Chuleta / Preguntas */
+/* Pestañas Misiones / Guía rápida / Preguntas */
 document.querySelectorAll('[data-tab]').forEach((btn) => btn.addEventListener('click', () => {
   document.querySelectorAll('[data-tab]').forEach((x) => {
     const on = x === btn;

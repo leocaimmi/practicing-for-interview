@@ -31,6 +31,7 @@ const MAN = {
   curl: 'Hace pedidos HTTP desde la terminal. Clave para probar APIs REST.\n  -X POST  método   -H  header   -d  body   -i  muestra headers\nEj: curl -X POST -H "Content-Type: application/json" -d \'{"name":"Leo"}\' https://jsonplaceholder.typicode.com/users',
   history: 'Lista los comandos que ejecutaste.',
   clear: 'Limpia la pantalla (atajo: Ctrl+L).',
+  cls: 'Limpia la pantalla. Es el comando de Windows (cmd y PowerShell): en un Linux real da "command not found" y se usa clear. Acá funciona igual que clear.',
   man: 'Muestra el manual de un comando.',
   env: 'Muestra las variables de entorno.',
   date: 'Fecha y hora actual.',
@@ -54,7 +55,7 @@ C.help = () => ({ out:
   Permisos     chmod  sudo  whoami
   Procesos     ps  kill  top
   Paquetes     apt  (y curl, si lo instalás)
-  Sistema      history  clear  date  uname  hostname  env  man
+  Sistema      history  clear/cls  date  uname  hostname  env  man
 
 Operadores: |  >  >>  <  &&  ||  ;   Comodines: *  ?
 Ejecutar un script: ./archivo.sh (necesita permiso x)
