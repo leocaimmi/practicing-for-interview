@@ -33,6 +33,7 @@ function nanoSave() {
   $('#nanomod').textContent = '';
   $('#nanostatus').innerHTML = '<span>[ Wrote ' + splitLines(nanoText.value).length + ' lines ]</span>';
   S.flags.nano = true;
+  if (typeof onFsChange === 'function') onFsChange();
   if (typeof checkMissions === 'function') checkMissions();
   save();
 }

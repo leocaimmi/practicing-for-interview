@@ -105,6 +105,7 @@ function runLine(line) {
 
 function afterRun() {
   updatePrompt();
+  if (typeof onFsChange === 'function') onFsChange();
   if (typeof pathHint === 'function') pathHint();
   if (typeof checkMissions === 'function') checkMissions();
   save();

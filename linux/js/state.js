@@ -57,6 +57,7 @@ function buildTree(spec) {
 function freshState() {
   return {
     fs: buildTree(SPEC), cwd: HOME, prev: HOME, hist: [], flags: {}, done: [], mission: 0,
+    view: 'term', treeRoot: '~', treeHidden: false, known: null, created: {}, changes: [],
     procs: JSON.parse(JSON.stringify(PROCS)), installed: [], lastCode: 0
   };
 }

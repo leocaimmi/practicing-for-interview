@@ -27,15 +27,19 @@
   <main class="grid">
     <section class="term" aria-label="Terminal simulada">
       <div class="bar">
-        <span class="dots" aria-hidden="true"><i></i><i></i></span>
+        <span class="dots" aria-hidden="true"><i></i><i></i><i class="x"></i></span>
         <span class="bar-title" id="bartitle">leo@ubuntu: ~</span>
-        <span class="dots" aria-hidden="true"><i></i><i class="x"></i></span>
+        <div class="vt" role="tablist" aria-label="Vista">
+          <button type="button" role="tab" data-view="term" aria-selected="true">terminal</button>
+          <button type="button" role="tab" data-view="tree" aria-selected="false">árbol</button>
+        </div>
       </div>
       <div class="term-body">
         <div class="screen" id="screen">
           <div id="out" aria-live="polite"></div>
           <div class="line"><span id="ps1"></span><input id="cmd" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="send" aria-label="Comando"></div>
         </div>
+        <div class="tree" id="tree" hidden aria-label="Árbol de carpetas"></div>
         <div class="nano" id="nano" hidden>
           <div class="nano-head"><span>GNU nano 7.2</span><span id="nanofile"></span><span id="nanomod"></span></div>
           <textarea id="nanotext" spellcheck="false" aria-label="Editor nano"></textarea>
@@ -105,6 +109,7 @@
 <script src="js/commands/help.js" defer></script>
 <script src="js/nano.js" defer></script>
 <script src="js/missions.js" defer></script>
+<script src="js/tree.js" defer></script>
 <script src="js/main.js" defer></script>
 </body>
 </html>
