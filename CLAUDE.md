@@ -24,7 +24,7 @@ Repo de práctica para una entrevista full-stack. Cada módulo es una herramient
 - Commits granulares, uno por pieza lógica, en castellano con Conventional Commits: `feat(linux):`, `style(linux):`, `fix:`, `docs:`, `ci:`.
 - **Sin líneas de Co-Authored-By ni otra atribución en los commits.**
 - Trabajar en ramas `feat/<modulo>` y mergear a `main` por PR.
-- Cada push a `main` despliega a GitHub Pages (`.github/workflows/pages.yml`).
+- El deploy es en Vercel como sitio estático (sin build). No hay workflows de GitHub Actions.
 
 ## Probar
 ```bash
