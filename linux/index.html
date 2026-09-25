@@ -27,11 +27,15 @@
   <main class="grid">
     <section class="term" aria-label="Terminal simulada">
       <div class="bar">
-        <span class="dots" aria-hidden="true"><i></i><i></i></span>
+        <span class="dots" aria-hidden="true"><i></i><i></i><i class="x"></i></span>
         <span class="bar-title" id="bartitle">leo@ubuntu: ~</span>
-        <span class="dots" aria-hidden="true"><i></i><i class="x"></i></span>
+        <div class="vt" role="tablist" aria-label="Vista">
+          <button type="button" role="tab" data-view="term" aria-selected="true">terminal</button>
+          <button type="button" role="tab" data-view="tree" aria-selected="false">árbol + terminal</button>
+        </div>
       </div>
       <div class="term-body">
+        <div class="tree" id="tree" hidden aria-label="Árbol de carpetas"></div>
         <div class="screen" id="screen">
           <div id="out" aria-live="polite"></div>
           <div class="line"><span id="ps1"></span><input id="cmd" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="send" aria-label="Comando"></div>
@@ -105,6 +109,7 @@
 <script src="js/commands/help.js" defer></script>
 <script src="js/nano.js" defer></script>
 <script src="js/missions.js" defer></script>
+<script src="js/tree.js" defer></script>
 <script src="js/main.js" defer></script>
 </body>
 </html>

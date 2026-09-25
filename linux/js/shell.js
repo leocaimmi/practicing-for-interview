@@ -88,6 +88,7 @@ function runLine(line) {
   echoPrompt(esc(line));
   if (line.trim()) S.hist.push(line);
   lastRan = [];
+  lastErrs = [];
   let seq;
   try { seq = parseLine(tokenize(line)); }
   catch (e) { printErr(String(e)); S.lastCode = 2; afterRun(); return; }
@@ -104,6 +105,8 @@ function runLine(line) {
 
 function afterRun() {
   updatePrompt();
+  if (typeof onFsChange === 'function') onFsChange();
+  if (typeof pathHint === 'function') pathHint();
   if (typeof checkMissions === 'function') checkMissions();
   save();
   scrollDown();
@@ -126,7 +129,7 @@ function addLine(cls, html) {
 }
 function echoPrompt(cmdHtml) { addLine('p', ps1() + cmdHtml); }
 function print(text, isHtml) { text = text.replace(/\n$/, ''); addLine('o', isHtml ? text : esc(text)); }
-function printErr(text) { addLine('e', esc(text)); }
+function printErr(text) { lastErrs.push(text); addLine('e', esc(text)); }
 function info(text) { addLine('i', esc(text)); }
 function scrollDown() { screenEl.scrollTop = screenEl.scrollHeight; }
 

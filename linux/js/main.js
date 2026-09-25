@@ -40,10 +40,15 @@ resetBtn.addEventListener('click', () => {
   motd(false);
   updatePrompt();
   if (typeof renderMissions === 'function') renderMissions();
+  if (typeof setView === 'function') { syncChanges(''); setView('term'); }
   inputEl.focus();
 });
 
 motd(restored);
 updatePrompt();
 if (typeof renderMissions === 'function') renderMissions();
+if (typeof setView === 'function') {
+  syncChanges(''); /* foto inicial del sistema de archivos para el historial de cambios */
+  if (S.view === 'tree') setView('tree');
+}
 if (!matchMedia('(hover: none)').matches) inputEl.focus();

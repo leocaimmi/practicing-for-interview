@@ -57,6 +57,7 @@ function buildTree(spec) {
 function freshState() {
   return {
     fs: buildTree(SPEC), cwd: HOME, prev: HOME, hist: [], flags: {}, done: [], mission: 0,
+    view: 'term', treeRoot: '~', treeHidden: false, known: null, created: {}, changes: [],
     procs: JSON.parse(JSON.stringify(PROCS)), installed: [], lastCode: 0
   };
 }
@@ -76,4 +77,5 @@ function save() {
 /* Flags de ejecución compartidos */
 let SUDO = false;      // true mientras corre un comando con sudo
 let lastRan = [];      // comandos ejecutados en la última línea (para las misiones)
+let lastErrs = [];     // errores impresos en la última línea (para las pistas)
 let scriptDepth = 0;   // evita recursión infinita en scripts
