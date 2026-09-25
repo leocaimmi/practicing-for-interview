@@ -84,6 +84,24 @@ function showPreviewError(host, error) {
   host.innerHTML = '<div class="pv-error">' + esc(fmt(error)) + '</div>';
 }
 
+/* Corre un ejemplo que define `name` (Demo o App) y lo muestra en `pv`; lo que imprime va a `out` en vivo */
+function runDemo(src, pv, out, name = 'Demo') {
+  const logs = [];
+  let queued = false;
+  const paint = () => { queued = false; if (out) out.innerHTML = renderConsole(logs); };
+  const con = makeConsole(logs, () => {
+    if (!queued) { queued = true; setTimeout(paint, 30); }
+  });
+  paint();
+  try {
+    const ex = evalCode(src, { names: [name], con });
+    if (typeof ex[name] !== 'function') throw new Error('No encontré el componente ' + name + '. Declaralo con: function ' + name + '() { ... }');
+    mountPreview(pv, h(ex[name]));
+  } catch (e) {
+    showPreviewError(pv, e);
+  }
+}
+
 /* ---------- helpers de DOM para los tests ---------- */
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
