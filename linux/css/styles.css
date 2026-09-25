@@ -164,3 +164,29 @@ ol.mis { list-style: none; margin: 0; padding: 0; display: flex; flex-direction:
 
 footer { margin-top: 18px; color: var(--faint); font-size: 13px; }
 footer kbd { font-family: var(--mono); background: var(--panel2); border: 1px solid var(--line); border-radius: 4px; padding: 0 5px; color: var(--text); }
+
+/* ---------- responsive ---------- */
+@media (max-width: 960px) {
+  .grid { grid-template-columns: minmax(0, 1fr); }
+  .term { position: relative; top: 0; }
+  .screen { height: clamp(340px, 58vh, 560px); }
+}
+@media (max-width: 560px) {
+  .top { align-items: stretch; }
+  .top > button { width: 100%; }
+  .screen { font-size: 15px; padding: 10px 10px 14px; }
+  #cmd { font-size: 16px; } /* 16px evita el zoom automático en iOS */
+  .cheat dl { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .cheat dt { white-space: normal; margin-top: 6px; }
+  .mis .body { padding-left: 12px; }
+  .side { padding: 14px 12px; }
+  .tabs button { flex: 1; padding-inline: 4px; }
+}
+/* teclas rápidas en pantallas táctiles */
+@media (hover: none) {
+  .keys { display: flex; }
+}
+@media (prefers-reduced-motion: reduce) {
+  h1 .cur { animation: none; }
+  .meter i, button { transition: none; }
+}
