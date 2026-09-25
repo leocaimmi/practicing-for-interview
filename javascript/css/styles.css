@@ -175,6 +175,7 @@ ol.why li { margin-bottom: 6px; }
 .play { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 20px; align-items: start; }
 .play .ed { min-height: 420px; }
 .play .console { margin-top: 0; min-height: 120px; max-height: 520px; }
+.play .note { margin-top: 12px; font-size: 14px; }
 .play select { font: inherit; font-size: 13px; color: var(--text); background: var(--panel2); border: 1px solid var(--line); border-radius: 6px; padding: 7px 8px; }
 
 /* ---------- chuleta ---------- */
