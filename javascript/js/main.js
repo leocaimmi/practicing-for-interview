@@ -13,15 +13,6 @@ function renderStats() {
   }
 }
 
-/* En desktop, los paneles ocupan justo el alto que queda en la ventana: scrollean ellos, no la página */
-function fitPanes() {
-  const root = document.documentElement;
-  const box = $('.pane:not([hidden]) :is(.lay, .play)');
-  if (!box || matchMedia('(max-width: 960px)').matches) { root.style.removeProperty('--pane-h'); return; }
-  const top = box.getBoundingClientRect().top + window.scrollY;
-  const below = $('footer').offsetHeight + 24 + 40; /* margen del footer + padding inferior */
-  root.style.setProperty('--pane-h', Math.max(440, window.innerHeight - top - below) + 'px');
-}
 window.addEventListener('resize', fitPanes);
 $$('details.rule').forEach((d) => d.addEventListener('toggle', fitPanes));
 
