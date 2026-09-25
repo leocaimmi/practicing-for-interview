@@ -26,7 +26,7 @@ Nunca había usado Linux, así que en lugar de levantar una VM armé un simulado
 - **Más de 40 comandos**: `ls -la`, `cd -`, `cp -r`, `mv`, `rm -r`, `grep -rn`, `find -name`, `chmod 755`, `ps aux`, `kill`, `sudo apt install`, `nano`, `curl` y más, con los mismos mensajes de error que Ubuntu.
 - **Realismo donde enseña algo**: `./deploy.sh` falla con `Permission denied` hasta hacer `chmod +x`; `apt` sin `sudo` falla por el lock; matar un proceso de `root` tira `Operation not permitted`.
 - **20 misiones guiadas** con pista y explicación, más una guía rápida de comandos y preguntas típicas de entrevista.
-- **Vista árbol**: un toggle en la barra de la terminal alterna entre la consola y el sistema de archivos dibujado como la estructura de un proyecto. Marca dónde estás parado, con qué comando se creó cada carpeta o archivo, y lleva el historial de lo que creaste y borraste.
+- **Vista árbol + terminal**: un toggle en la barra de la terminal divide la pantalla: arriba, el sistema de archivos dibujado como la estructura de un proyecto, y abajo, la consola. El árbol se actualiza con cada comando, así se ve cómo te vas moviendo. Marca dónde estás parado, con qué comando se creó cada carpeta o archivo, y lleva el historial de lo que creaste y borraste.
 - **Pistas** cuando algo típico sale mal, por ejemplo una ruta relativa que falla porque ya estás adentro de esa carpeta.
 - `curl` simulado contra `jsonplaceholder.typicode.com` para practicar REST (`-X`, `-d`, `-i`).
 - Autocompletado con Tab, historial con ↑↓, teclas rápidas en celular y progreso guardado en `localStorage`.
