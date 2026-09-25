@@ -74,7 +74,21 @@
         <h3>Procesos y sistema</h3>
         <dl><dt>ps aux</dt><dd>Todos los procesos</dd><dt>kill PID</dt><dd>Pedir que termine (SIGTERM)</dd><dt>kill -9 PID</dt><dd>Forzar (SIGKILL)</dd><dt>top / htop</dt><dd>Monitor en vivo</dd><dt>sudo apt update</dt><dd>Actualizar lista de paquetes</dd><dt>sudo apt install x</dt><dd>Instalar un paquete</dd><dt>man cmd</dt><dd>Manual (acá, en castellano)</dd></dl>
       </div>
-      <div id="tab-pre" class="qa" hidden><!-- preguntas --></div>
+      <div id="tab-pre" class="qa" hidden>
+        <h3>Lo que te pueden preguntar</h3>
+        <details><summary>¿Ruta absoluta vs relativa?</summary><p>Absoluta arranca en la raíz <code>/</code> y funciona desde cualquier lado (<code>/home/leo/docs</code>). Relativa depende de dónde estás parado (<code>docs</code>, <code>../x</code>).</p></details>
+        <details><summary>¿Qué diferencia hay entre &gt; y &gt;&gt;?</summary><p><code>&gt;</code> crea o pisa el archivo. <code>&gt;&gt;</code> agrega al final sin borrar lo anterior. Típico: <code>echo "x" &gt;&gt; log.txt</code>.</p></details>
+        <details><summary>¿Qué es un pipe?</summary><p>Conecta la salida estándar de un comando con la entrada del siguiente: <code>ps aux | grep node</code>. Es la filosofía Unix: herramientas chicas que se combinan.</p></details>
+        <details><summary>¿Qué significa chmod 755?</summary><p>Cada dígito suma r=4, w=2, x=1. 7 = rwx para el dueño, 5 = r-x para grupo y otros. Es lo típico para scripts y carpetas. Archivos comunes: 644.</p></details>
+        <details><summary>¿Cómo ejecutás un script?</summary><p>Le das permiso con <code>chmod +x deploy.sh</code> y lo corrés con <code>./deploy.sh</code>. El <code>./</code> hace falta porque la carpeta actual no está en el PATH. La primera línea <code>#!/bin/bash</code> (shebang) dice qué intérprete usar.</p></details>
+        <details><summary>¿Qué es sudo y por qué apt lo pide?</summary><p>Ejecuta un comando como root (superusuario). Instalar paquetes escribe en carpetas del sistema como <code>/usr</code>, que tu usuario no puede tocar.</p></details>
+        <details><summary>¿rm -r vs rmdir?</summary><p><code>rmdir</code> solo borra carpetas vacías (más seguro). <code>rm -r</code> borra la carpeta con todo adentro. <code>rm -rf</code> además no pregunta ni avisa: con cuidado.</p></details>
+        <details><summary>¿Cómo encontrás y matás un proceso colgado?</summary><p><code>ps aux | grep node</code> para ver el PID, después <code>kill PID</code> (SIGTERM, le pide que cierre prolijo). Si no responde, <code>kill -9 PID</code> (SIGKILL, lo corta en seco). También <code>lsof -i :3000</code> para ver quién usa un puerto.</p></details>
+        <details><summary>¿Cómo buscás algo en todo un proyecto?</summary><p>Texto adentro de archivos: <code>grep -rn "TODO" src/</code>. Archivos por nombre: <code>find . -name "*.js"</code>.</p></details>
+        <details><summary>¿Cómo mirás un log en vivo?</summary><p><code>tail -f /var/log/syslog</code> o el log de tu app. Sale con Ctrl+C. En servicios con systemd: <code>journalctl -u servicio -f</code>.</p></details>
+        <details><summary>¿stdout vs stderr?</summary><p>Son dos salidas distintas: 1 = salida normal, 2 = errores. <code>cmd 2&gt; errores.txt</code> redirige solo errores; <code>cmd &gt; todo.txt 2&gt;&amp;1</code> manda ambos al mismo archivo.</p></details>
+        <details><summary>¿Cómo ves variables de entorno?</summary><p><code>echo $HOME</code>, <code>env</code> para ver todas, <code>export API_URL=...</code> para definir una en la sesión. Así se pasan secretos a una app sin hardcodearlos.</p></details>
+      </div>
     </aside>
   </main>
 
