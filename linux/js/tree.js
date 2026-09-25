@@ -1,5 +1,6 @@
-/* Vista "árbol": el sistema de archivos dibujado como la estructura de un proyecto, con dónde estás parado,
-   qué se creó en esta sesión y con qué comando. Es solo una representación del estado simulado. */
+/* Vista "árbol + terminal": arriba el sistema de archivos dibujado como la estructura de un proyecto
+   (dónde estás parado, qué se creó en esta sesión y con qué comando) y abajo la consola, las dos activas.
+   Es solo una representación del estado simulado. */
 
 /* ---------- registro de cambios ---------- */
 
@@ -41,6 +42,8 @@ function onFsChange() {
 
 /* ---------- dibujo del árbol ---------- */
 const treeOpen = {};  /* carpetas abiertas o cerradas a mano: ruta → true/false */
+let treeCwd = null;   /* última carpeta dibujada: si cambia, la línea actual destella */
+let moved = '';       /* ' moved' mientras se dibuja después de moverse de carpeta */
 
 function isOpen(abs) {
   if (abs in treeOpen) return treeOpen[abs];
@@ -69,24 +72,28 @@ function treeLines(node, abs, prefix, out) {
     if (S.cwd === p) html += '<span class="t-here">← estás acá</span>';
     if (S.created[p] !== undefined) html += '<span class="t-made">+ ' + esc(S.created[p] || 'creado') + '</span>';
 
-    out.push('<div class="tl' + (S.cwd === p ? ' cur' : '') + '"' + (dir ? ' data-path="' + esc(p) + '" role="button" tabindex="0" aria-expanded="' + open + '"' : '') + '>' + html + '</div>');
+    out.push('<div class="tl' + (S.cwd === p ? ' cur' + moved : '') + '"' + (dir ? ' data-path="' + esc(p) + '" role="button" tabindex="0" aria-expanded="' + open + '"' : '') + '>' + html + '</div>');
     if (open) treeLines(child, p, prefix + (last ? '    ' : '│   '), out);
   });
 }
 
 function renderTree() {
+  const tree = $('#tree');
+  const keepScroll = tree.scrollTop;
+  moved = treeCwd !== null && treeCwd !== S.cwd ? ' moved' : '';
+  treeCwd = S.cwd;
   const root = S.treeRoot === '/' ? '/' : HOME;
   const lines = [];
   treeLines(getNode(root), root, '', lines);
 
   const rootName = root === '/' ? '/' : '~/';
   const rootCls = 't-dir' + (S.cwd === root || S.cwd.startsWith(root === '/' ? '/' : root + '/') ? ' t-path' : '');
-  const rootLine = '<div class="tl' + (S.cwd === root ? ' cur' : '') + '"><span class="' + rootCls + '">' + rootName + '</span>' +
+  const rootLine = '<div class="tl' + (S.cwd === root ? ' cur' + moved : '') + '"><span class="' + rootCls + '">' + rootName + '</span>' +
     (root === HOME ? '<span class="t-pre"> (' + HOME + ')</span>' : '') + (S.cwd === root ? '<span class="t-here">← estás acá</span>' : '') + '</div>';
   const outside = root === HOME && !(S.cwd === HOME || S.cwd.startsWith(HOME + '/'));
 
   const changes = (S.changes || []).slice(-10).reverse();
-  $('#tree').innerHTML =
+  tree.innerHTML =
     '<div class="t-head">' +
     '<div class="t-where">Estás en <b>' + esc(tildify(S.cwd)) + '</b><span>pwd: ' + esc(S.cwd) + '</span></div>' +
     '<div class="t-opts">' +
@@ -102,20 +109,27 @@ function renderTree() {
       ? '<ul>' + changes.map((c) => '<li class="' + (c.op === '+' ? 'add' : 'del') + '"><b>' + c.op + '</b> ' +
         (c.dir ? 'carpeta ' : 'archivo ') + '<span>' + esc(tildify(c.path)) + (c.dir ? '/' : '') + '</span>' +
         '<code>' + esc(c.cmd) + '</code></li>').join('') + '</ul>'
-      : '<p>Todavía no creaste ni borraste nada. Probá con mkdir o touch y volvé acá.</p>') +
+      : '<p>Todavía no creaste ni borraste nada. Probá con mkdir o touch en la consola de abajo.</p>') +
     '</div>';
+
+  /* Se conserva el scroll, pero la carpeta actual siempre queda a la vista */
+  tree.scrollTop = keepScroll;
+  const cur = $('#tree .tl.cur');
+  if (cur && (cur.offsetTop < tree.scrollTop || cur.offsetTop + cur.offsetHeight > tree.scrollTop + tree.clientHeight)) {
+    tree.scrollTop = cur.offsetTop - tree.clientHeight / 3;
+  }
 }
 
-/* ---------- toggle terminal / árbol ---------- */
+/* ---------- toggle: solo terminal / árbol arriba y terminal abajo ---------- */
 function setView(view) {
-  const tree = view === 'tree';
-  S.view = tree ? 'tree' : 'term';
-  $('#tree').hidden = !tree;
-  $('#screen').hidden = tree;
-  $('#keys').classList.toggle('off', tree);
+  const split = view === 'tree';
+  S.view = split ? 'tree' : 'term';
+  $('#tree').hidden = !split;
+  $('.term-body').classList.toggle('split', split);
   document.querySelectorAll('.vt button').forEach((b) => b.setAttribute('aria-selected', b.dataset.view === S.view));
-  if (tree) renderTree();
-  else inputEl.focus();
+  if (split) { treeCwd = null; renderTree(); }
+  scrollDown();
+  inputEl.focus();
   save();
 }
 
