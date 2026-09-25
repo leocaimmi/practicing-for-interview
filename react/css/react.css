@@ -13,7 +13,10 @@
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; font-size: 15px; line-height: 1.45;
   overflow: auto;
 }
-.pv :where(h1, h2, h3) { margin: 0 0 8px; color: var(--pv-text); font-family: inherit; text-shadow: none; }
+/* :is (y no :where) para ganarle a los estilos de títulos de .card, que vienen de dojo.css */
+.pv :is(h1, h2, h3) { margin: 0 0 8px; color: var(--pv-text); font-family: inherit; font-weight: 700; text-shadow: none; text-transform: none; letter-spacing: normal; line-height: 1.25; }
+.pv h2 { font-size: 22px; }
+.pv h3 { font-size: 17px; }
 .pv :where(p) { margin: 0 0 8px; }
 .pv :where(ul) { margin: 0 0 8px; padding-left: 20px; }
 .pv :where(button) {
