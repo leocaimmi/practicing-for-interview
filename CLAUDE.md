@@ -14,6 +14,10 @@ Repo de práctica para una entrevista full-stack. Cada módulo es una herramient
 - Fuentes: Ubuntu y Ubuntu Mono (Google Fonts).
 - Responsive: sin scroll horizontal a 390 px; inputs a 16 px para que iOS no haga zoom; teclas rápidas en `@media (hover: none)`.
 
+## Textos
+- Castellano rioplatense formal: voseo sí, modismos no (nada de "metete", "celu", "de una") y nada de términos de España ("Guía rápida", no "Chuleta").
+- No mencionar empresas ni marcas personales: el proyecto es solo práctica para la entrevista.
+
 ## Git
 - Commits granulares, uno por pieza lógica, en castellano con Conventional Commits: `feat(linux):`, `style(linux):`, `fix:`, `docs:`, `ci:`.
 - **Sin líneas de Co-Authored-By ni otra atribución en los commits.**
@@ -23,10 +27,11 @@ Repo de práctica para una entrevista full-stack. Cada módulo es una herramient
 ## Probar
 ```bash
 python3 -m http.server 8000
-# abrir http://localhost:8000/ y http://localhost:8000/linux/
+# abrir http://localhost:8000/, /linux/ y /javascript/
 ```
 Chequear en la consola que no haya errores de JS y probar a 390 px de ancho.
 
 ## Módulos
 - `linux/` Dojo de terminal: listo.
-- En cola: JavaScript ES6+, React, SQL, REST/JSON, Git, n8n. Cada uno en su carpeta con la misma estética, y se habilita su tarjeta en la landing (`index.html`).
+- `javascript/` Dojo de JavaScript: listo. Scripts: `state → highlight → runner → editor → loop → katas → play → main`. El código del usuario corre con `runCode` (AsyncFunction con `console` y timers envueltos); las katas reciben mocks por scope (`api`, `leerArchivo`, `fetch`).
+- En cola: React, SQL, REST/JSON, Git, n8n. Cada uno en su carpeta con la misma estética, y se habilita su tarjeta en la landing (`index.html`).

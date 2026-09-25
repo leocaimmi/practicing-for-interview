@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Dojo de JavaScript</title>
+  <meta name="description" content="Ejercicios de event loop, katas con tests y guía rápida para repasar JavaScript ES6+: promesas, async/await y arrow functions.">
+  <meta name="theme-color" content="#000000">
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700&family=Ubuntu+Mono:wght@400;700&display=swap">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div>
+      <a class="back" href="../">← practicing-for-interview</a>
+      <p class="eyebrow">Repaso para la entrevista · JavaScript ES6+</p>
+      <h1>Dojo de JavaScript<span class="cur" aria-hidden="true"></span></h1>
+      <p class="lede">Promesas, async/await, arrow functions y event loop. Sin autocompletado ni IA: escribís vos, corrés los tests y después lo explicás en voz alta como en la entrevista.</p>
+    </div>
+    <div class="stats">
+      <div><strong id="st-loop">0/0</strong><span>event loop</span></div>
+      <div><strong id="st-kata">0/0</strong><span>katas</span></div>
+    </div>
+  </header>
+
+  <nav class="tabs" role="tablist" aria-label="Secciones">
+    <button type="button" role="tab" data-tab="loop" aria-selected="true">Event loop</button>
+    <button type="button" role="tab" data-tab="kata" aria-selected="false">Katas</button>
+    <button type="button" role="tab" data-tab="play" aria-selected="false">Playground</button>
+    <button type="button" role="tab" data-tab="guia" aria-selected="false">Guía rápida</button>
+    <button type="button" role="tab" data-tab="pre" aria-selected="false">Preguntas</button>
+  </nav>
+
+  <main>
+    <section id="tab-loop" class="pane" aria-label="Event loop">
+      <details class="rule" open>
+        <summary>La regla que resuelve todos estos ejercicios</summary>
+        <div class="flow">
+          <div class="q"><b>1 · Pila</b><span>Todo el código sincrónico, de arriba abajo. Incluye el cuerpo de <code>new Promise(...)</code> y el de una función <code>async</code> hasta su primer <code>await</code>.</span></div>
+          <div class="q"><b>2 · Microtareas</b><span><code>.then</code>, <code>.catch</code>, <code>.finally</code>, lo que sigue a un <code>await</code> y <code>queueMicrotask</code>. Se vacía la cola entera, incluso lo que se agrega mientras tanto.</span></div>
+          <div class="q"><b>3 · Una macrotarea</b><span><code>setTimeout</code>, <code>setInterval</code>, eventos del DOM, I/O. Corre una sola y se vuelve al paso 2.</span></div>
+        </div>
+      </details>
+      <div class="lay">
+        <ol class="list" id="loop-list" aria-label="Ejercicios de event loop"></ol>
+        <article class="card" id="loop-main" aria-live="polite"></article>
+      </div>
+    </section>
+
+    <section id="tab-kata" class="pane" aria-label="Katas" hidden>
+      <div class="lay">
+        <ol class="list" id="kata-list" aria-label="Katas"></ol>
+        <article class="card" id="kata-main"></article>
+      </div>
+    </section>
+
+    <section id="tab-play" class="pane" aria-label="Playground" hidden></section>
+
+    <section id="tab-guia" class="pane cheat" aria-label="Guía rápida" hidden>
+      <article>
+        <h3>Variables</h3>
+<pre data-hl>
+const PI = 3.14;   // no se reasigna (usala por defecto)
+let total = 0;     // se puede reasignar
+total += 10;
+// var: scope de función y hoisting. No se usa más.
+</pre>
+        <p><code>const</code> no hace inmutable al objeto: <code>const u = {}; u.nombre = 'Leo'</code> es válido. Lo que no podés es reasignar <code>u</code>.</p>
+      </article>
+
+      <article>
+        <h3>Arrow functions</h3>
+<pre data-hl>
+const doble = (n) => n * 2;            // return implícito
+const sumar = (a, b) => {              // con llaves: return explícito
+  return a + b;
+};
+const crear = (nombre) => ({ nombre }); // objeto: entre paréntesis
+</pre>
+        <p>No tienen <code>this</code> propio ni <code>arguments</code>, y no se usan con <code>new</code>.</p>
+      </article>
+
+      <article>
+        <h3>Strings, defaults, rest y spread</h3>
+<pre data-hl>
+const saludo = `Hola, ${nombre}!`;        // template literal
+const f = (nombre = 'invitado') => nombre; // parámetro por defecto
+const sumarTodo = (...nums) => nums.reduce((a, n) => a + n, 0); // rest
+const copia = [...lista, 4];              // spread de array
+const nuevo = { ...usuario, edad: 31 };   // spread de objeto
+</pre>
+      </article>
+
+      <article>
+        <h3>Destructuring</h3>
+<pre data-hl>
+const { nombre, edad = 0 } = usuario;     // con valor por defecto
+const { address: { city } } = usuario;    // anidado
+const [primero, , tercero] = lista;       // saltea el segundo
+const [valor, setValor] = useState(0);    // así se usa en React
+const presentar = ({ nombre }) => nombre; // en parámetros
+</pre>
+      </article>
+
+      <article>
+        <h3>Arrays</h3>
+<pre data-hl>
+lista.map((x) => x * 2);          // transforma: array nuevo
+lista.filter((x) => x > 0);       // filtra: array nuevo
+lista.reduce((acc, x) => acc + x, 0); // acumula en un valor
+lista.find((x) => x.id === 3);    // el primero o undefined
+lista.some((x) => x.activo);      // ¿alguno cumple?
+lista.every((x) => x.activo);     // ¿todos cumplen?
+lista.includes(3);                // ¿está?
+</pre>
+        <p>Ninguno de estos modifica el array original. <code>sort</code>, <code>push</code> y <code>splice</code> sí lo modifican.</p>
+      </article>
+
+      <article>
+        <h3>Objetos</h3>
+<pre data-hl>
+const u = { nombre, edad };          // shorthand
+u?.direccion?.ciudad;                // optional chaining: undefined si falta
+const limite = config.limite ?? 10;  // ?? solo reemplaza null/undefined
+Object.keys(u);    // [ 'nombre', 'edad' ]
+Object.entries(u); // [ [ 'nombre', 'Leo' ], [ 'edad', 30 ] ]
+</pre>
+        <p><code>??</code> contra <code>||</code>: con <code>0</code> o <code>''</code>, <code>||</code> usa el valor por defecto y <code>??</code> no.</p>
+      </article>
+
+      <article>
+        <h3>Promesas</h3>
+<pre data-hl>
+const p = new Promise((resolve, reject) => {
+  // el executor corre en el acto
+  ok ? resolve(valor) : reject(new Error('falló'));
+});
+
+p.then((v) => console.log(v))
+  .catch((e) => console.error(e.message))
+  .finally(() => console.log('siempre'));
+</pre>
+        <p>Estados: pendiente → cumplida o rechazada. Una vez asentada, no cambia más.</p>
+      </article>
+
+      <article>
+        <h3>Combinar promesas</h3>
+<pre data-hl>
+await Promise.all([a, b]);        // todas, o falla con la primera que rechace
+await Promise.allSettled([a, b]); // todas, con { status, value | reason }
+await Promise.race([a, b]);       // la primera que se asiente
+await Promise.any([a, b]);        // la primera que se cumpla
+</pre>
+      </article>
+
+      <article>
+        <h3>async / await</h3>
+<pre data-hl>
+async function cargar(id) {
+  try {
+    const usuario = await api.getUser(id); // pausa esta función, no el programa
+    return usuario.name;                   // resuelve la promesa
+  } catch (error) {
+    throw new Error('No se pudo cargar');  // rechaza la promesa
+  }
+}
+
+// Secuencial (uno espera al otro) contra paralelo
+const a = await pedir(1); const b = await pedir(2);
+const [c, d] = await Promise.all([pedir(1), pedir(2)]);
+</pre>
+      </article>
+
+      <article>
+        <h3>fetch</h3>
+<pre data-hl>
+const res = await fetch('/api/turnos', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ fecha: '2026-09-28' })
+});
+if (!res.ok) throw new Error('HTTP ' + res.status); // 404 y 500 no rechazan
+const data = await res.json();
+</pre>
+      </article>
+
+      <article>
+        <h3>Módulos</h3>
+<pre data-hl>
+// api.js
+export const getTurnos = () => fetch('/api/turnos');
+export default function App() {}
+
+// main.js
+import App, { getTurnos } from './api.js';
+</pre>
+        <p>ES modules (<code>import</code>/<code>export</code>) son el estándar. En Node viejo vas a ver CommonJS: <code>require</code> y <code>module.exports</code>.</p>
+      </article>
+
+      <article>
+        <h3>Event loop en una línea</h3>
+<pre data-hl>
+// 1. código sincrónico (incluye executor de Promise y async hasta el await)
+// 2. todas las microtareas (then, catch, finally, await)
+// 3. una macrotarea (setTimeout, eventos) y vuelta al 2
+</pre>
+        <p>JavaScript tiene un solo hilo: lo asincrónico no corre "en paralelo", se encola y espera su turno.</p>
+      </article>
+    </section>
+
+    <section id="tab-pre" class="pane qa" aria-label="Preguntas" hidden>
+      <h3>Asincronía</h3>
+      <details><summary>¿Qué es una promesa?</summary><p>Un objeto que representa un valor que todavía no está: el resultado de una operación asincrónica. Tiene tres estados: pendiente, cumplida (<code>fulfilled</code>) o rechazada (<code>rejected</code>). Una vez que se asienta, no cambia más. Con <code>.then</code> recibo el valor, con <code>.catch</code> el error y <code>.finally</code> corre siempre.</p></details>
+      <details><summary>¿Por qué existen las promesas si ya había callbacks?</summary><p>Con callbacks, cada paso asincrónico anidaba otro nivel (el "callback hell") y el manejo de errores se repetía en cada uno. Las promesas se encadenan de forma plana, un solo <code>.catch</code> atrapa errores de toda la cadena, y se pueden combinar con <code>Promise.all</code>.</p></details>
+      <details><summary>¿Qué hacen async y await?</summary><p><code>async</code> hace que una función siempre devuelva una promesa. <code>await</code> pausa esa función hasta que la promesa se asienta y devuelve su valor; si se rechaza, tira el error en esa línea y lo atrapo con <code>try/catch</code>. Es azúcar sintáctica sobre promesas: se lee como código sincrónico.</p></details>
+      <details><summary>¿await bloquea el programa?</summary><p>No. Pausa solamente la función <code>async</code> donde está. El resto del programa sigue: el event loop atiende otros eventos, timers y respuestas mientras tanto. Por eso la interfaz no se congela.</p></details>
+      <details><summary>¿Qué es el event loop?</summary><p>JavaScript corre en un solo hilo con una pila de llamadas. Las operaciones asincrónicas (timers, red, eventos) las resuelve el entorno (navegador o Node) y, cuando terminan, encolan su callback. El event loop espera a que la pila esté vacía, vacía la cola de microtareas y después toma una macrotarea, en ciclo.</p></details>
+      <details><summary>¿Microtareas contra macrotareas?</summary><p>Microtareas: <code>.then</code>, <code>.catch</code>, <code>.finally</code>, lo que sigue a un <code>await</code> y <code>queueMicrotask</code>. Macrotareas: <code>setTimeout</code>, <code>setInterval</code>, eventos del DOM, I/O. Después de cada macrotarea se vacían todas las microtareas; por eso una promesa resuelta siempre sale antes que un <code>setTimeout(fn, 0)</code>.</p></details>
+      <details><summary>¿Promise.all, allSettled, race o any?</summary><p><code>all</code>: espera todas y falla con la primera que rechace. <code>allSettled</code>: espera todas y te da el estado de cada una, sin fallar. <code>race</code>: se queda con la primera que se asiente, bien o mal (sirve para timeouts). <code>any</code>: la primera que se cumpla; falla solo si fallan todas.</p></details>
+      <details><summary>¿Cómo hacés pedidos en paralelo y cuándo en serie?</summary><p>En paralelo: <code>await Promise.all(ids.map(id =&gt; api.get(id)))</code>, tarda lo que el más lento. En serie: <code>for...of</code> con <code>await</code> adentro, solo cuando un pedido depende del resultado del anterior. <code>forEach</code> con una función <code>async</code> no espera a nadie.</p></details>
+      <details><summary>¿Por qué fetch no falla con un 404 o un 500?</summary><p>Porque para <code>fetch</code> el pedido salió bien: hubo respuesta. Solo rechaza por errores de red (sin conexión, DNS, CORS). Hay que revisar <code>res.ok</code> (status 200 a 299) y tirar el error a mano: <code>if (!res.ok) throw new Error('HTTP ' + res.status)</code>.</p></details>
+
+      <h3>Lenguaje</h3>
+      <details><summary>¿var, let o const?</summary><p><code>const</code> por defecto, <code>let</code> si la variable se reasigna, <code>var</code> nunca. <code>var</code> tiene scope de función y se "eleva" (hoisting) con valor <code>undefined</code>. <code>let</code> y <code>const</code> tienen scope de bloque y, antes de su declaración, están en la "zona muerta temporal": usarlas tira <code>ReferenceError</code>.</p></details>
+      <details><summary>¿Arrow function contra function?</summary><p>La arrow es más corta, tiene return implícito y, sobre todo, no tiene <code>this</code> propio: usa el del lugar donde se escribió. Tampoco tiene <code>arguments</code> ni se puede usar con <code>new</code>. Para métodos de objeto que usan <code>this</code>, conviene la sintaxis de método o <code>function</code>.</p></details>
+      <details><summary>¿Qué es un closure?</summary><p>Una función que recuerda las variables del scope donde se creó, aunque ese scope ya haya terminado. Sirve para datos privados (un contador que nadie puede tocar desde afuera) y es la base de cómo los hooks de React recuerdan valores entre renders.</p>
+<pre data-hl>
+function crearContador() {
+  let cuenta = 0;
+  return () => ++cuenta;
+}
+</pre></details>
+      <details><summary>¿== contra ===?</summary><p><code>===</code> compara valor y tipo, sin conversiones. <code>==</code> convierte tipos antes de comparar (<code>'1' == 1</code> es <code>true</code>). Uso siempre <code>===</code>; la única excepción aceptada es <code>x == null</code> para cubrir <code>null</code> y <code>undefined</code> juntos.</p></details>
+      <details><summary>¿null contra undefined?</summary><p><code>undefined</code>: algo que no se asignó (variable sin valor, propiedad que no existe, función sin <code>return</code>). <code>null</code>: "vacío" puesto a propósito por el programador. <code>??</code> y <code>?.</code> tratan a los dos igual.</p></details>
+      <details><summary>¿map contra forEach?</summary><p><code>map</code> devuelve un array nuevo con cada elemento transformado. <code>forEach</code> no devuelve nada; es para efectos (loguear, guardar). Si no vas a usar el array resultante, <code>forEach</code>; si sí, <code>map</code>. En React se usa <code>map</code> para renderizar listas.</p></details>
+      <details><summary>¿Copia superficial contra copia profunda?</summary><p><code>{ ...obj }</code> y <code>[...arr]</code> copian solo el primer nivel: los objetos anidados siguen siendo compartidos. Para una copia profunda: <code>structuredClone(obj)</code>. Es clave en React: el estado no se muta, se reemplaza por una copia nueva.</p></details>
+      <details><summary>¿Qué es JSON y cómo se usa?</summary><p>Un formato de texto para intercambiar datos, basado en la sintaxis de objetos de JavaScript pero más estricto: claves con comillas dobles, sin funciones, sin <code>undefined</code>, sin comas finales. <code>JSON.stringify(obj)</code> pasa de objeto a texto y <code>JSON.parse(texto)</code> de texto a objeto.</p></details>
+      <details><summary>¿Qué trajo ES6 (ES2015)?</summary><p><code>let</code>/<code>const</code>, arrow functions, template literals, destructuring, parámetros por defecto, rest/spread, clases, módulos (<code>import</code>/<code>export</code>), promesas, <code>Map</code>/<code>Set</code>. Después llegaron <code>async/await</code> (ES2017), <code>?.</code> y <code>??</code> (ES2020).</p></details>
+    </section>
+  </main>
+
+  <footer><kbd>Ctrl</kbd>+<kbd>Enter</kbd> corre el código · <kbd>Tab</kbd> indenta dentro del editor (<kbd>Esc</kbd> y después <kbd>Tab</kbd> para salir) · el progreso se guarda en este navegador</footer>
+</div>
+
+<script src="js/state.js" defer></script>
+<script src="js/highlight.js" defer></script>
+<script src="js/runner.js" defer></script>
+<script src="js/editor.js" defer></script>
+<script src="js/loop.js" defer></script>
+<script src="js/katas.js" defer></script>
+<script src="js/play.js" defer></script>
+<script src="js/main.js" defer></script>
+</body>
+</html>
