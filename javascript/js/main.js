@@ -40,5 +40,6 @@ renderStats();
 openLoop(Math.min(S.loop, LOOP.length - 1));
 if (typeof openKata === 'function') openKata(Math.min(S.kata, KATAS.length - 1));
 if (typeof initPlayground === 'function') initPlayground();
+if (typeof openGuide === 'function') openGuide(Math.min(S.guide, GUIDE.length - 1));
 showTab(S.tab);
 if (document.fonts) document.fonts.ready.then(fitPanes); /* las fuentes cambian el alto del header */

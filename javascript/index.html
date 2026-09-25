@@ -60,156 +60,11 @@
 
     <section id="tab-play" class="pane" aria-label="Playground" hidden></section>
 
-    <section id="tab-guia" class="pane cheat" aria-label="Guía rápida" hidden>
-      <article>
-        <h3>Variables</h3>
-<pre data-hl>
-const PI = 3.14;   // no se reasigna (usala por defecto)
-let total = 0;     // se puede reasignar
-total += 10;
-// var: scope de función y hoisting. No se usa más.
-</pre>
-        <p><code>const</code> no hace inmutable al objeto: <code>const u = {}; u.nombre = 'Leo'</code> es válido. Lo que no podés es reasignar <code>u</code>.</p>
-      </article>
-
-      <article>
-        <h3>Arrow functions</h3>
-<pre data-hl>
-const doble = (n) => n * 2;            // return implícito
-const sumar = (a, b) => {              // con llaves: return explícito
-  return a + b;
-};
-const crear = (nombre) => ({ nombre }); // objeto: entre paréntesis
-</pre>
-        <p>No tienen <code>this</code> propio ni <code>arguments</code>, y no se usan con <code>new</code>.</p>
-      </article>
-
-      <article>
-        <h3>Strings, defaults, rest y spread</h3>
-<pre data-hl>
-const saludo = `Hola, ${nombre}!`;        // template literal
-const f = (nombre = 'invitado') => nombre; // parámetro por defecto
-const sumarTodo = (...nums) => nums.reduce((a, n) => a + n, 0); // rest
-const copia = [...lista, 4];              // spread de array
-const nuevo = { ...usuario, edad: 31 };   // spread de objeto
-</pre>
-      </article>
-
-      <article>
-        <h3>Destructuring</h3>
-<pre data-hl>
-const { nombre, edad = 0 } = usuario;     // con valor por defecto
-const { address: { city } } = usuario;    // anidado
-const [primero, , tercero] = lista;       // saltea el segundo
-const [valor, setValor] = useState(0);    // así se usa en React
-const presentar = ({ nombre }) => nombre; // en parámetros
-</pre>
-      </article>
-
-      <article>
-        <h3>Arrays</h3>
-<pre data-hl>
-lista.map((x) => x * 2);          // transforma: array nuevo
-lista.filter((x) => x > 0);       // filtra: array nuevo
-lista.reduce((acc, x) => acc + x, 0); // acumula en un valor
-lista.find((x) => x.id === 3);    // el primero o undefined
-lista.some((x) => x.activo);      // ¿alguno cumple?
-lista.every((x) => x.activo);     // ¿todos cumplen?
-lista.includes(3);                // ¿está?
-</pre>
-        <p>Ninguno de estos modifica el array original. <code>sort</code>, <code>push</code> y <code>splice</code> sí lo modifican.</p>
-      </article>
-
-      <article>
-        <h3>Objetos</h3>
-<pre data-hl>
-const u = { nombre, edad };          // shorthand
-u?.direccion?.ciudad;                // optional chaining: undefined si falta
-const limite = config.limite ?? 10;  // ?? solo reemplaza null/undefined
-Object.keys(u);    // [ 'nombre', 'edad' ]
-Object.entries(u); // [ [ 'nombre', 'Leo' ], [ 'edad', 30 ] ]
-</pre>
-        <p><code>??</code> contra <code>||</code>: con <code>0</code> o <code>''</code>, <code>||</code> usa el valor por defecto y <code>??</code> no.</p>
-      </article>
-
-      <article>
-        <h3>Promesas</h3>
-<pre data-hl>
-const p = new Promise((resolve, reject) => {
-  // el executor corre en el acto
-  ok ? resolve(valor) : reject(new Error('falló'));
-});
-
-p.then((v) => console.log(v))
-  .catch((e) => console.error(e.message))
-  .finally(() => console.log('siempre'));
-</pre>
-        <p>Estados: pendiente → cumplida o rechazada. Una vez asentada, no cambia más.</p>
-      </article>
-
-      <article>
-        <h3>Combinar promesas</h3>
-<pre data-hl>
-await Promise.all([a, b]);        // todas, o falla con la primera que rechace
-await Promise.allSettled([a, b]); // todas, con { status, value | reason }
-await Promise.race([a, b]);       // la primera que se asiente
-await Promise.any([a, b]);        // la primera que se cumpla
-</pre>
-      </article>
-
-      <article>
-        <h3>async / await</h3>
-<pre data-hl>
-async function cargar(id) {
-  try {
-    const usuario = await api.getUser(id); // pausa esta función, no el programa
-    return usuario.name;                   // resuelve la promesa
-  } catch (error) {
-    throw new Error('No se pudo cargar');  // rechaza la promesa
-  }
-}
-
-// Secuencial (uno espera al otro) contra paralelo
-const a = await pedir(1); const b = await pedir(2);
-const [c, d] = await Promise.all([pedir(1), pedir(2)]);
-</pre>
-      </article>
-
-      <article>
-        <h3>fetch</h3>
-<pre data-hl>
-const res = await fetch('/api/turnos', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({ fecha: '2026-09-28' })
-});
-if (!res.ok) throw new Error('HTTP ' + res.status); // 404 y 500 no rechazan
-const data = await res.json();
-</pre>
-      </article>
-
-      <article>
-        <h3>Módulos</h3>
-<pre data-hl>
-// api.js
-export const getTurnos = () => fetch('/api/turnos');
-export default function App() {}
-
-// main.js
-import App, { getTurnos } from './api.js';
-</pre>
-        <p>ES modules (<code>import</code>/<code>export</code>) son el estándar. En Node viejo vas a ver CommonJS: <code>require</code> y <code>module.exports</code>.</p>
-      </article>
-
-      <article>
-        <h3>Event loop en una línea</h3>
-<pre data-hl>
-// 1. código sincrónico (incluye executor de Promise y async hasta el await)
-// 2. todas las microtareas (then, catch, finally, await)
-// 3. una macrotarea (setTimeout, eventos) y vuelta al 2
-</pre>
-        <p>JavaScript tiene un solo hilo: lo asincrónico no corre "en paralelo", se encola y espera su turno.</p>
-      </article>
+    <section id="tab-guia" class="pane" aria-label="Guía rápida" hidden>
+      <div class="lay">
+        <ol class="list" id="guide-list" aria-label="Temas de la guía"></ol>
+        <article class="card" id="guide-main" aria-live="polite"></article>
+      </div>
     </section>
 
     <section id="tab-pre" class="pane qa" aria-label="Preguntas" hidden>
@@ -253,6 +108,7 @@ function crearContador() {
 <script src="js/loop.js" defer></script>
 <script src="js/katas.js" defer></script>
 <script src="js/play.js" defer></script>
+<script src="js/guide.js" defer></script>
 <script src="js/main.js" defer></script>
 </body>
 </html>

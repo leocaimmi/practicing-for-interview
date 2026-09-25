@@ -12,7 +12,9 @@ function freshState() {
     kata: 0,          // kata actual
     kataDone: {},     // id → true
     drafts: {},       // id de kata → código escrito
-    play: null        // código del playground (null = ejemplo por defecto)
+    play: null,       // código del playground (null = ejemplo por defecto)
+    guide: 0,         // tema abierto de la guía rápida
+    guideSeen: {}     // índice → true (temas ya leídos)
   };
 }
 
