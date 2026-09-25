@@ -178,8 +178,8 @@ ol.why li { margin-bottom: 6px; }
 .play .note { margin-top: 12px; font-size: 14px; }
 .play select { font: inherit; font-size: 13px; color: var(--text); background: var(--panel2); border: 1px solid var(--line); border-radius: 6px; padding: 7px 8px; }
 
-/* ---------- chuleta ---------- */
-.cheat { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(340px, 100%), 1fr)); gap: 14px; }
+/* ---------- guía rápida ---------- */
+.cheat { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(460px, 100%), 1fr)); gap: 14px; }
 .cheat article { min-width: 0; padding: 16px; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; }
 .cheat h3 { margin: 0 0 10px; font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--neon); font-weight: 500; }
 .cheat pre.code { font-size: 14px; padding: 12px; }
