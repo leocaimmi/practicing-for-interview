@@ -2,7 +2,7 @@
    Cada kata: id, t (título), d (enunciado con `código`), start (código inicial), exports (lo que se testea),
    tests(ex, t, m) con las funciones exportadas, el tester y los mocks, sol (solución) y why (cómo defenderla). */
 
-/* Mocks que ven las katas: una API con demora, un callback estilo Node y un fetch de mentira */
+/* Mocks que ven las katas: una API con demora, un callback estilo Node y un fetch simulado */
 function makeMocks() {
   const USERS = {
     1: { id: 1, name: 'Leanne Graham', email: 'Sincere@april.biz' },
@@ -30,7 +30,7 @@ function makeMocks() {
     else callback(new Error("ENOENT: no such file or directory, open '" + nombre + "'"));
   }, 30);
 
-  /* fetch de mentira con la forma de una Response real: ok, status, json() */
+  /* fetch simulado con la forma de una Response real: ok, status, json() */
   const POSTS = {
     1: [
       { userId: 1, id: 1, title: 'sunt aut facere repellat provident' },
@@ -411,7 +411,7 @@ console.log(await usuarioONull(404));
 }`,
     why: [
       'Con `await`, una promesa rechazada se convierte en un `throw` en esa línea, así que la atrapa un `try/catch` común.',
-      'Ojo con `return api.getUser(id)` sin `await` adentro del `try`: la promesa se devuelve antes de rechazarse y el `catch` nunca se entera. Por eso va `return await`.',
+      'Cuidado con `return api.getUser(id)` sin `await` adentro del `try`: la promesa se devuelve antes de rechazarse y el `catch` nunca se entera. Por eso va `return await`.',
       'Decidir qué hacer con el error es parte del diseño: acá devuelvo `null`; en una UI mostraría un mensaje y en una API respondería un 4xx o 5xx.'
     ]
   },

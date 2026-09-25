@@ -1,4 +1,4 @@
-/* Playground: editor libre con consola. Acá fetch es el real, así que se puede pegar contra jsonplaceholder. */
+/* Playground: editor libre con consola. Acá fetch es el real, así que se pueden hacer pedidos reales a jsonplaceholder. */
 
 const EJEMPLOS = {
   fetch: `// fetch real contra jsonplaceholder, con await en el nivel superior

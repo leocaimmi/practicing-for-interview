@@ -57,7 +57,7 @@ console.log('b');`,
       'Llamar a una función `async` ejecuta su cuerpo de forma sincrónica hasta el primer `await`.',
       'En el `await` la función se pausa y devuelve una promesa; el resto (`tarea: sigue`) queda como microtarea.',
       'Mientras tanto el código de afuera sigue: se imprime `b`, y después se retoma la función.',
-      'Ojo: `await` pausa la función, no el hilo. El programa nunca se bloquea.'
+      'Importante: `await` pausa la función, no el hilo. El programa nunca se bloquea.'
     ]
   },
   {
@@ -248,7 +248,7 @@ function renderLoop() {
         '<div class="row">' +
         '<button type="button" data-act="undo"' + (loopAns.length ? '' : ' disabled') + '>Borrar último</button>' +
         '<button type="button" data-act="clear"' + (loopAns.length ? '' : ' disabled') + '>Empezar de nuevo</button>' +
-        '<button type="button" data-act="give">Me rindo</button>' +
+        '<button type="button" data-act="give">Ver la respuesta</button>' +
         '<button type="button" class="primary push" data-act="check"' + (loopAns.length === loopOut.length ? '' : ' disabled') + '>Comprobar</button>' +
         '</div>';
     } else {
