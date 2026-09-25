@@ -32,11 +32,3 @@ const md = (s) => esc(s).replace(/`([^`]+)`/g, '<code>$1</code>');
 function stripComments(src) {
   return src.replace(/(`(?:\\[\s\S]|[^`\\])*`|'(?:\\.|[^'\\\n])*'|"(?:\\.|[^"\\\n])*")|\/\/[^\n]*|\/\*[\s\S]*?\*\//g, (m, str) => str || '');
 }
-
-/* Bloques estáticos del HTML con data-hl: el texto se reemplaza por su versión resaltada */
-function highlightStatic(root = document) {
-  $$('pre[data-hl]', root).forEach((pre) => {
-    pre.innerHTML = highlight(pre.textContent.replace(/^\n/, ''));
-    pre.classList.add('code');
-  });
-}

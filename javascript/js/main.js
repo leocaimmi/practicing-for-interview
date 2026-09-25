@@ -39,7 +39,6 @@ function showTab(name) {
 
 $$('[role="tab"]').forEach((b) => b.addEventListener('click', () => showTab(b.dataset.tab)));
 
-highlightStatic();
 renderStats();
 openLoop(Math.min(S.loop, LOOP.length - 1));
 if (typeof openKata === 'function') openKata(Math.min(S.kata, KATAS.length - 1));
